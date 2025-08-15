@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace MajdataEdit;
@@ -417,10 +418,10 @@ internal class SimaiTimingPoint
             simaiNote.noteType = SimaiNoteType.Tap; //if nothing happen in following if
         }
 
-        if (noteText.Contains('f')) simaiNote.isHanabi = true;
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('f')) simaiNote.isHanabi = true;
 
         //hold
-        if (noteText.Contains('h'))
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('h'))
         {
             if (isTouchNote(noteText))
             {
@@ -460,7 +461,7 @@ internal class SimaiTimingPoint
         }
 
         //break
-        if (noteText.Contains('b'))
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('b'))
         {
             if (simaiNote.noteType == SimaiNoteType.Slide)
             {
@@ -499,20 +500,46 @@ internal class SimaiTimingPoint
         }
 
         //EX
-        if (noteText.Contains('x'))
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('x'))
         {
             simaiNote.isEx = true;
             noteText = noteText.Replace("x", "");
         }
 
         //starHead
-        if (noteText.Contains('$'))
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('$'))
         {
             simaiNote.isForceStar = true;
             if (noteText.Count(o => o == '$') == 2)
                 simaiNote.isFakeRotate = true;
             noteText = noteText.Replace("$", "");
         }
+
+        //mute
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('m'))
+        {
+            simaiNote.isMute = true;
+        }
+
+        //custon skin
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('c'))
+        {
+            simaiNote.customSkin = getCustomSkinPath(noteText);
+        }
+        /******************
+         * custom skin如何使用：（优先级从大到小执行）
+         * tap：将tap贴图直接替换为路径内图片（因此，伪双押tap可填入tap_each.png做到真 伪双押的效果）
+         * hold：将hold贴图直接替换为路径内图片，hold_on贴图自动在文件名（含each和break）后面加上"_on"进行读取（优先级1），off同上
+         * touch：将touch贴图直接替换为路径内图片，注意贴图应是四个之一，暂不支持不同方向使用不同贴图，touch_border贴图自动在文件名后面加上"_border_2"和"_border_3"进行读取（优先级3），touch_just，touch_point贴图同上
+         * touch_hold：将touch_hold贴图替换为路径内图片，路径应填"_0","_1","_2","_3",前面的那一部分，由程序自动读取（优先级1），border贴图自动在文件名后面加上"_border"进行读取（优先级3）
+         * star：将star贴图直接替换为路径内图片，star_double贴图自动在文件名（含each和break）后面加上"_double"进行读取（优先级1）
+         * slide：将slide贴图直接替换为路径内图片，注意贴图是星星的一个箭头
+         * wifi：将wifi贴图直接替换为路径内图片，路径应填"_0","_1" ... "_9","_10",前面的那一部分，由程序自动读取（优先级1）
+         * 
+         * each：自动在文件名后面加上"_each"进行读取（优先级2）（因此，如在需要each tap用单tap皮肤时，需要自己将单tap皮肤复制一份例如abc_each.png，然后填入abc.png即可）
+         * break：自动在文件名后面加上"_break"进行读取（优先级2）
+         * ex：自动在文件名后面加上"_ex"进行读取，注意贴图应是外面的发光层的叠加图
+        ******************/
 
         simaiNote.noteContent = noteText;
         return simaiNote;
@@ -521,6 +548,7 @@ internal class SimaiTimingPoint
     private bool isSlideNote(string noteText)
     {
         var SlideMarks = "-^v<>Vpqszw";
+        noteText = Regex.Replace(noteText, "\"(.*?)\"", ""); // 去除自定义皮肤路径，上面的也是
         foreach (var mark in SlideMarks)
             if (noteText.Contains(mark))
                 return true;
@@ -531,7 +559,7 @@ internal class SimaiTimingPoint
     {
         var SlideMarks = "ABCDE";
         foreach (var mark in SlideMarks)
-            if (noteText.StartsWith(mark.ToString()))
+            if (Regex.Replace(noteText, "\"(.*?)\"", "").StartsWith(mark.ToString(), false, null))
                 return true;
         return false;
     }
@@ -638,6 +666,16 @@ internal class SimaiTimingPoint
 
         return 1d / (bpm / 60d);
     }
+
+
+    private string? getCustomSkinPath(string noteText)
+    {
+        if (noteText.Count(c => { return c == '\"'; }) == 2)
+        {
+            return noteText.Split('\"')[1];
+        }
+        return null;
+    }
 }
 
 internal enum SimaiNoteType
@@ -659,6 +697,7 @@ internal class SimaiNote
     public bool isHanabi;
     public bool isSlideBreak;
     public bool isSlideNoHead;
+    public bool isMute; 
 
     public string? noteContent; //used for star explain
     public SimaiNoteType noteType;
@@ -668,4 +707,6 @@ internal class SimaiNote
 
     public int startPosition = 1; //键位（1-8）
     public char touchArea = ' ';
+
+    public string? customSkin; //自定义皮肤文件名（Skin文件夹内）（为NULL时默认）
 }

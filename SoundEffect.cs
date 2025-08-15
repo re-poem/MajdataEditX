@@ -112,6 +112,11 @@ public partial class MainWindow
             {
                 var se = waitToBePlayed[0];
                 waitToBePlayed.RemoveAt(0);
+                
+                if (se.isMute)
+                {
+                    return;
+                }
 
                 if (se.hasAnswer) Bass.BASS_ChannelPlay(answerStream, true);
                 if (se.hasJudge) Bass.BASS_ChannelPlay(judgeStream, true);
@@ -231,6 +236,8 @@ public partial class MainWindow
                         if (!note.isBreak && !note.isEx)
                             // 如果二者皆没有 则是普通note 播放普通判定音
                             stobj.hasJudge = true;
+                        if (note.isMute) 
+                            stobj.isMute = true;
                         break;
                     }
                     case SimaiNoteType.Hold:
@@ -264,7 +271,8 @@ public partial class MainWindow
                                 waitToBePlayed.Add(holdRelease);
                             }
                         }
-
+                        if (note.isMute)
+                            stobj.isMute = true;
                         break;
                     }
                     case SimaiNoteType.Slide:
@@ -281,6 +289,7 @@ public partial class MainWindow
 
                             if (note.isEx) stobj.hasJudgeEx = true;
                             if (!note.isBreak && !note.isEx) stobj.hasJudge = true;
+                            if (note.isMute) stobj.isMute = true;
                         }
 
                         // Slide启动音效
@@ -304,6 +313,7 @@ public partial class MainWindow
                                 slide = new SoundEffectTiming(targetTime, _hasSlide: true);
                             waitToBePlayed.Add(slide);
                         }
+                        if (note.isMute) stobj.isMute = true;
 
                         // Slide尾巴 如果是Break Slide的话 就要添加一个Break音效
                         if (note.isSlideBreak)
@@ -330,6 +340,7 @@ public partial class MainWindow
                         stobj.hasAnswer = true;
                         stobj.hasTouch = true;
                         if (note.isHanabi) stobj.hasHanabi = true;
+                        if (note.isMute) stobj.isMute = true;
                         break;
                     }
                     case SimaiNoteType.TouchHold:
@@ -352,7 +363,7 @@ public partial class MainWindow
                                 _hasTouchHoldEnd: true);
                             waitToBePlayed.Add(tHoldRelease);
                         }
-
+                        if (note.isMute) stobj.isMute = true;
                         break;
                     }
                 }
@@ -763,6 +774,7 @@ public partial class MainWindow
         public bool hasTouch;
         public bool hasTouchHold;
         public bool hasTouchHoldEnd;
+        public bool isMute;
         public int noteGroupIndex = -1;
 
         public SoundEffectTiming(double _time, bool _hasAnswer = false, bool _hasJudge = false,
@@ -770,7 +782,7 @@ public partial class MainWindow
             bool _hasBreak = false, bool _hasTouch = false, bool _hasHanabi = false,
             bool _hasJudgeEx = false, bool _hasTouchHold = false, bool _hasSlide = false,
             bool _hasTouchHoldEnd = false, bool _hasAllPerfect = false, bool _hasClock = false,
-            bool _hasBreakSlideStart = false, bool _hasBreakSlide = false, bool _hasJudgeBreakSlide = false)
+            bool _hasBreakSlideStart = false, bool _hasBreakSlide = false, bool _hasJudgeBreakSlide = false, bool isMute = false)
         {
             time = _time;
             hasAnswer = _hasAnswer;
@@ -788,6 +800,7 @@ public partial class MainWindow
             hasBreakSlideStart = _hasBreakSlideStart;
             hasBreakSlide = _hasBreakSlide;
             hasJudgeBreakSlide = _hasJudgeBreakSlide;
+            this.isMute = isMute;
         }
     }
 
