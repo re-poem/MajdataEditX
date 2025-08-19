@@ -332,11 +332,6 @@ public partial class MainWindow : Window
 
     internal async void SyntaxCheck()
     {
-        if (editorSetting!.SyntaxCheckLevel == 0)
-        {
-            SetErrCount(GetLocalizedString("SyntaxCheckLevel1"));
-            return;
-        }
 #if DEBUG
         await SyntaxChecker.ScanAsync(GetRawFumenText());
         SetErrCount(SyntaxChecker.GetErrorCount());
@@ -597,7 +592,7 @@ public partial class MainWindow : Window
     private void ChartChangeTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
         Console.WriteLine("TextChanged");
-        SyntaxCheck();
+        //SyntaxCheck(); //不要进行定期检查（疑似莫名其妙卡死原因）
         Dispatcher.Invoke(
             delegate
             {
@@ -1119,27 +1114,12 @@ public partial class MainWindow : Window
     {
         if (isPlaying)
             TogglePause();
-        else
-        {
-            if (lastEditorState != EditorControlMethod.Pause && 
-                editorSetting!.SyntaxCheckLevel == 2 && 
-                SyntaxChecker.GetErrorCount() != 0)
-            {
-                ShowErrorWindow();
-                return;
-            }
+        else 
             TogglePlay(playMethod);
-        }
-            
     }
 
     private void TogglePlayAndStop(PlayMethod playMethod = PlayMethod.Normal)
     {
-        if (editorSetting!.SyntaxCheckLevel == 2 && SyntaxChecker.GetErrorCount() != 0)
-        {
-            ShowErrorWindow();
-            return;
-        }
         if (isPlaying)
             ToggleStop();
         else

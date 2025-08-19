@@ -67,7 +67,6 @@ public partial class EditorSettingPanel : Window
         ChartRefreshDelay.Text = window.editorSetting.ChartRefreshDelay.ToString();
         AutoUpdate.IsChecked = window.editorSetting.AutoCheckUpdate;
         SmoothSlideAnime.IsChecked = window.editorSetting.SmoothSlideAnime;
-        SyntaxCheckLevel.SelectedIndex = window.editorSetting.SyntaxCheckLevel;
     }
 
     private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -115,7 +114,6 @@ public partial class EditorSettingPanel : Window
         window.editorSetting!.AutoCheckUpdate = (bool) AutoUpdate.IsChecked!;
         window.editorSetting!.SmoothSlideAnime = (bool) SmoothSlideAnime.IsChecked!;
         window.editorSetting!.editorPlayMethod = (EditorPlayMethod)PlayMethod.SelectedIndex;
-        window.editorSetting!.SyntaxCheckLevel = SyntaxCheckLevel.SelectedIndex;
         // window.editorSetting.isComboEnabled = (bool) ComboDisplay.IsChecked!;
         window.editorSetting!.comboStatusType = (EditorComboIndicator)Enum.GetValues(
             window.editorSetting!.comboStatusType.GetType()
