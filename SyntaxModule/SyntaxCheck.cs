@@ -1,4 +1,5 @@
 ﻿
+using System.Text.RegularExpressions;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 
@@ -398,19 +399,22 @@ namespace MajdataEdit.SyntaxModule
         /// <param name="noteStr"></param>
         static bool NoteSyntaxCheck(string noteStr,int posX,int posY)
         {
-            if (IsTap(noteStr))
+            string _noteStr;
+            _noteStr = Regex.Replace(noteStr, @"c""([^""]*)""", ""); //接受所有自定义皮肤语法
+            _noteStr = _noteStr.Replace("m", ""); //接受所有mute语法
+            if (IsTap(_noteStr))
                 return true;
-            else if (IsHold(noteStr))
+            else if (IsHold(_noteStr))
             {
-                if (HoldSyntaxCheck(noteStr))
+                if (HoldSyntaxCheck(_noteStr))
                     return true;
             }
-            else if (IsSlide(ref noteStr))
+            else if (IsSlide(ref _noteStr))
             {
-                if (SlideSyntaxCheck(noteStr))
+                if (SlideSyntaxCheck(_noteStr))
                     return true;
             }
-            else if (IsTouch(noteStr))
+            else if (IsTouch(_noteStr))
                 return true;
             //else if(noteStr == "E")
             //    return true;
