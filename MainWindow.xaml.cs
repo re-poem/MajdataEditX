@@ -304,6 +304,7 @@ public partial class MainWindow : Window
         SyntaxChecker.ScanAsync(GetRawFumenText()).ContinueWith(t =>
         {
             SetErrCount(SyntaxChecker.GetErrorCount());
+            Dispatcher.Invoke(() => { ShowErrorWindow(); });
         });
 #else
         try
@@ -318,7 +319,6 @@ public partial class MainWindow : Window
             SetErrCount(GetLocalizedString("InternalErr"));
         }
 #endif
-        ShowErrorWindow();
     }
     void ShowErrorWindow()
     {
