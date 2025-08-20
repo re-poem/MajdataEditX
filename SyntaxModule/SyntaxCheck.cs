@@ -562,9 +562,11 @@ namespace MajdataEdit.SyntaxModule
                     //检查下一字符是否为"["或"b"
                     //同时避免越界
 
-                    if ((i + 1 < _slideStr.Length) && _slideStr[i + 1] == '[')
+                    if ((i + 1 < _slideStr.Length) && _slideStr[i + 1] is ('[' or 'b'))
                     {
-                        var headIndex = Array.IndexOf<int>(bodyIndex, ++i);
+                        int headIndex;
+                        if (_slideStr[i + 1] == '[') headIndex = Array.IndexOf<int>(bodyIndex, i+1);
+                        else headIndex = Array.IndexOf<int>(bodyIndex, i+2);
                         //未找到头部索引
                         if (headIndex == -1)
                             return false;
@@ -876,15 +878,15 @@ namespace MajdataEdit.SyntaxModule
             int index = 0;
             var _s = s.Split("[");
             string header = _s[0];
-            bool isTouch = IsTouch(header.Replace("h", ""));
+            bool isTouchHold = header.Contains('h') && IsTouch(header.Replace("h", ""));
 
-            if (!isTouch && !int.TryParse(s[0..1], out index))//总是检查第1位
+            if (!isTouchHold && !int.TryParse(s[0..1], out index))//总是检查第1位
                 return false;
-            if (!isTouch && !PointCheck(index))//错误键位直接返回
+            if (!isTouchHold && !PointCheck(index))//错误键位直接返回
                 return false;
             if (s.Length < 2 || header.Length < 2)
                 return false;
-            else if (isTouch)//TouchHold特例
+            else if (isTouchHold)//TouchHold特例
                 return true;
             //Hold严格判定：第二位必须是'h'，'b'，'x'不限制位置
             //妥协一下，改为松判定
