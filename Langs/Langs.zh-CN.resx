@@ -120,6 +120,12 @@
   <data name="FIles" xml:space="preserve">
     <value>文件</value>
   </data>
+  <data name="LaunchMaiMuriDX" xml:space="preserve">
+    <value>启动MaiMuriDX</value>
+  </data>
+  <data name="RenderEnable" xml:space="preserve">
+    <value>开启渲染</value>
+  </data>
   <data name="AskCloseView" xml:space="preserve">
     <value>要关闭View吗？</value>
   </data>
@@ -297,7 +303,7 @@
     <value>开始检测</value>
   </data>
   <data name="SyntaxError" xml:space="preserve">
-    <value>[语法错误] "{0}"({1}L,{2}C)解析失败，可能存在语法错误</value>
+    <value>[语法错误] "{0}"解析失败，可能存在语法错误</value>
   </data>
   <data name="WhatsThis" xml:space="preserve">
     <value>这是什么</value>
@@ -483,9 +489,6 @@
     <value>内部错误</value>
   </data>
   <data name="SyntaxWarning" xml:space="preserve">
-    <value>[警告] 谱面应当以"E"结尾："{0}"({1}L,{2}C)</value>
-  </data>
-  <data name="LaunchMaiMuriDX" xml:space="preserve">
-    <value>启动MaiMuriDX</value>
+    <value>[警告] 谱面应当以"E"结尾："{0}"</value>
   </data>
 </root>

@@ -123,4 +123,7 @@
   <data name="LaunchMaiMuriDX" xml:space="preserve">
     <value />
   </data>
+  <data name="RenderEnable" xml:space="preserve">
+    <value />
+  </data>
 </root>

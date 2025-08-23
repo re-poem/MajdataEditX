@@ -99,7 +99,7 @@
                           IsEnabled="False" />
                 <MenuItem x:Name="SyntaxCheckButton" Header="{lex:Loc SyntaxDisplay}" Click="SyntaxCheckButton_Click"
                           IsEnabled="False" />
-                <MenuItem x:Name="MaiMuriDX" Header="{lex:Loc LaunchMaiMuriDX}" Click="LaunchMaiMuriDXButton_Click"
+                <MenuItem x:Name="MaiMuriDX" Header="{lex:Loc LaunchMaiMuriDX}" Click="MaiMuriDXButton_Click"
                           IsEnabled="False" />
             </MenuItem>
             <MenuItem Header="Majnet" Click="MenuItem_Majnet_Click"

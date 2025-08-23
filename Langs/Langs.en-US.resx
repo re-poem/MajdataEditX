@@ -120,6 +120,12 @@
   <data name="FIles" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="LaunchMaiMuriDX" xml:space="preserve">
+    <value>Launch MaiMuriDX</value>
+  </data>
+  <data name="RenderEnable" xml:space="preserve">
+    <value>Enable Render</value>
+  </data>
   <data name="AskCloseView" xml:space="preserve">
     <value>Close Viewer?</value>
   </data>
@@ -303,7 +309,7 @@ Values lower than 0.15 will cause the detection to miss.
     <value>Begin Error Checking</value>
   </data>
   <data name="SyntaxError" xml:space="preserve">
-    <value>[SyntaxError] at "{0}"({1}L,{2}C)</value>
+    <value>[SyntaxError] at "{0}"</value>
   </data>
   <data name="WhatsThis" xml:space="preserve">
     <value>What's This?</value>
@@ -491,9 +497,6 @@ Click OK to start render.</value>
     <value>Internal Error</value>
   </data>
   <data name="SyntaxWarning" xml:space="preserve">
-    <value>[Warning] The chart should end with "E" : "{0}"({1}L,{2}C)</value>
-  </data>
-  <data name="LaunchMaiMuriDX" xml:space="preserve">
-    <value>Launch MaiMuriDX</value>
+    <value>[Warning] The chart should end with "E" : "{0}"</value>
   </data>
 </root>

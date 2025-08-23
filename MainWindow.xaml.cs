@@ -1,4 +1,10 @@
-﻿using System.ComponentModel;
+﻿using DiscordRPC.Logging;
+using MajdataEdit.AutoSaveModule;
+using MajdataEdit.MaiMuriDX;
+using MajdataEdit.SyntaxModule;
+using Microsoft.Win32;
+using Python.Runtime;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Media;
@@ -9,11 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using DiscordRPC.Logging;
-using MajdataEdit.AutoSaveModule;
-using Microsoft.Win32;
 using Un4seen.Bass;
-using MajdataEdit.SyntaxModule;
 using Timer = System.Timers.Timer;
 
 namespace MajdataEdit;
@@ -23,6 +25,7 @@ namespace MajdataEdit;
 /// </summary>
 public partial class MainWindow : Window
 {
+    ErrorList errorListWindow;
     public MainWindow()
     {
         InitializeComponent();
@@ -31,6 +34,7 @@ public partial class MainWindow : Window
             MessageBox.Show("正在以软件渲染模式运行\nソフトウェア・レンダリング・モードで動作\nBooting as software rendering mode.");
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
         }
+        errorListWindow = new();
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -60,6 +64,10 @@ public partial class MainWindow : Window
         playbackSpeedHideTimer.Elapsed += PlbHideTimer_Elapsed;
 
         if (editorSetting!.AutoCheckUpdate) CheckUpdate(true);
+
+        //errorListWindow.ErrorListView.Items.Add(new Error(ErrorType.Info, new Position(3, 5), "666", "三个6"));
+        errorListWindow.Owner = this;
+        //errorListWindow.Show();
 
         #region 异常退出处理
 
@@ -321,34 +329,49 @@ public partial class MainWindow : Window
         }
 #endif
     }
-    private void LaunchMaiMuriDXButton_Click(object sender, RoutedEventArgs e)
+    private void MaiMuriDXButton_Click(object sender, RoutedEventArgs e)
     {
+        LaunchMaiMuriDX window = new(new RunArg(GetRawFumenText(), float.Parse(OffsetTextBox.Text), audioDir, false));
+        window.Show();
     }
     void ShowErrorWindow()
     {
-        var mcrWindow = new MuriCheckResult
+        for (int i = errorListWindow.ErrorListView.Items.Count - 1; i >= 0; i--)
         {
-            Owner = this
-        };
+            if ((errorListWindow.ErrorListView.Items[i] as Error)!.Type == ErrorType.Syntax)
+            {
+                errorListWindow.ErrorListView.Items.RemoveAt(i);
+            }
+        }
         var errList = SyntaxChecker.ErrorList;
         errList.ForEach(e =>
         {
-            e.positionY--;
-            mcrWindow.errorPosition.Add(e);
-            var eRow = new ListBoxItem
-            {
-                Content = e.eMessage,
-                Name = "rr" + mcrWindow.CheckResult_Listbox.Items.Count
-            };
-            eRow.AddHandler(PreviewMouseDoubleClickEvent,
-                new MouseButtonEventHandler(mcrWindow.ListBoxItem_PreviewMouseDoubleClick));
-            mcrWindow.CheckResult_Listbox.Items.Add(eRow);
+            errorListWindow.ErrorListView.Items.Add(e);
         });
-        mcrWindow.Show();
+        errorListWindow.Show();
     }
     private void SyntaxCheckButton_Click(object sender, MouseButtonEventArgs e)
     {
-        ShowErrorWindow();
+#if DEBUG
+        SyntaxChecker.ScanAsync(GetRawFumenText()).ContinueWith(t =>
+        {
+            SetErrCount(SyntaxChecker.GetErrorCount());
+            Dispatcher.Invoke(() => { ShowErrorWindow(); });
+        });
+#else
+        try
+        {
+            SyntaxChecker.ScanAsync(GetRawFumenText()).ContinueWith(t =>
+            {
+                SetErrCount(SyntaxChecker.GetErrorCount());
+                Dispatcher.Invoke(() => { ShowErrorWindow(); });
+            });
+        }
+        catch
+        {
+            SetErrCount(GetLocalizedString("InternalErr"));
+        }
+#endif
     }
     private void MenuItem_EditorSetting_Click(object? sender, RoutedEventArgs e)
     {

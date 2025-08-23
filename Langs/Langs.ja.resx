@@ -120,6 +120,12 @@
   <data name="FIles" xml:space="preserve">
     <value>ファイル</value>
   </data>
+  <data name="LaunchMaiMuriDX" xml:space="preserve">
+    <value>MaiMuriDX</value>
+  </data>
+  <data name="RenderEnable" xml:space="preserve">
+    <value>レンダリングを開く</value>
+  </data>
   <data name="AskCloseView" xml:space="preserve">
     <value>Viewを閉しますか？</value>
   </data>
@@ -313,7 +319,7 @@ If you wanna an excellent map, you can set the accuracy to
     <comment>Maybe not the most accurate translation</comment>
   </data>
   <data name="SyntaxError" xml:space="preserve">
-    <value>[SyntaxError] "{0}"({1}L,{2}C) fail to analyze，may be a syntax error here.</value>
+    <value>[SyntaxError] "{0}" fail to analyze，may be a syntax error here.</value>
     <comment>Translation required. {0} is the simai-language text which has Syntax Error. {1} and {2} is Line and Column index(which may not needed to be translate)</comment>
   </data>
   <data name="WhatsThis" xml:space="preserve">
@@ -521,9 +527,6 @@ Open Browser to download latest update of Majdata?</value>
     <value>内部エラー</value>
   </data>
   <data name="SyntaxWarning" xml:space="preserve">
-    <value>[警告] チャートは「E」で終わる必要があります : "{0}"({1}L,{2}C)</value>
-  </data>
-  <data name="LaunchMaiMuriDX" xml:space="preserve">
-    <value>MaiMuriDX</value>
+    <value>[警告] チャートは「E」で終わる必要があります : "{0}"</value>
   </data>
 </root>

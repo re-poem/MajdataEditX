@@ -45,6 +45,7 @@ public partial class MainWindow : Window
     public static readonly SemVersion MAJDATA_VERSION = SemVersion.Parse(MAJDATA_VERSION_STRING, SemVersionStyles.Any);
 
     public static string maidataDir = "";
+    public static string audioDir = "";
 
     //float[] wavedBs;
     private readonly short[][] waveRaws = new short[3][];
@@ -252,6 +253,7 @@ public partial class MainWindow : Window
         var useOgg = File.Exists(path + "/track.ogg");
 
         var audioPath = path + "/track" + (useOgg ? ".ogg" : ".mp3");
+        audioDir = audioPath;
         var dataPath = path + "/maidata.txt";
         if (!File.Exists(audioPath))
         {

@@ -4,11 +4,6 @@ using System.Windows.Navigation;
 
 namespace MajdataEdit.SyntaxModule
 {
-    enum InfomationLevel
-    {
-        Warning,
-        Error
-    }
     enum DirectionType
     {
         /// <summary>
@@ -24,39 +19,26 @@ namespace MajdataEdit.SyntaxModule
         /// </summary>
         Anticlockwise
     }
-    internal class SimaiErrorInfo : ErrorInfo
-    {
-        public string eMessage;
-        public InfomationLevel Level;
-        public SimaiErrorInfo(int _posX, int _posY, string eMessage,InfomationLevel level = InfomationLevel.Error) : base(_posX, _posY)
-        {
-            this.eMessage = eMessage;
-            this.Level = level;
-        }
-    }
+
     internal static class SyntaxChecker
     {
         static readonly string[] SlideTypeList = { "qq", "pp", "q", "p", "w", "z", "s", "V", "v", "<", ">", "^", "-" };
         static readonly char[] SensorList = { 'A','B','C','D','E'};
-        internal static List<SimaiErrorInfo> ErrorList = new();
+        internal static List<Error> ErrorList = new();
 
-        public static int GetErrorCount() => ErrorList.Where(e => e.Level is InfomationLevel.Error).Count();
+        public static int GetErrorCount() => ErrorList.Where(e => e.Type is ErrorType.Syntax).Count();
         /// <summary>
         /// 检查原始Simai文本
         /// </summary>
         /// <param name="noteStr"></param>
         internal static async Task ScanAsync(string str)
         {
-            Action<string, int, int,string, InfomationLevel> addInfo = (s, x, y, localStr,level) =>
+            Action<string, int, int,string> addInfo = (s, x, y, localStr) =>
             {
-                ErrorList.Add(new SimaiErrorInfo(x, y,
-                    string.Format(
-                        MainWindow.GetLocalizedString(localStr),
-                        s,
-                        y,
-                        x), level));
+                ErrorList.Add(new Error(ErrorType.Syntax, new Position(x, y),
+                    string.Format(MainWindow.GetLocalizedString(localStr),s),null));
             };
-            Action<string, int, int> addError = (s, x, y) => addInfo(s,x,y, "SyntaxError",InfomationLevel.Error);
+            Action<string, int, int> addError = (s, x, y) => addInfo(s,x,y, "SyntaxError");
 
             await Task.Run(() =>
             {
@@ -70,7 +52,7 @@ namespace MajdataEdit.SyntaxModule
                     if (simaiChart.Last().Replace("\n", "") == "E")//移除结尾E
                         simaiChart = simaiChart.SkipLast(1).ToArray();
                     else
-                        addInfo("", -1, -1, "SyntaxWarning", InfomationLevel.Warning);
+                        addInfo("", -1, -1, "SyntaxWarning");
                 }
 
                 foreach (var s in simaiChart)
@@ -143,12 +125,8 @@ namespace MajdataEdit.SyntaxModule
 
             Action<string> addError = s =>
             {
-                ErrorList.Add(new SimaiErrorInfo(posX, posY,
-                    string.Format(
-                        MainWindow.GetLocalizedString("SyntaxError"),
-                        s,
-                        posY,
-                        posX)));
+                ErrorList.Add(new Error(ErrorType.Syntax, new Position(posX, posY),
+                    string.Format(MainWindow.GetLocalizedString("SyntaxError"), s), null));
             };
 
             for (int i = 0; i < simaiStr.Length; i++)
@@ -414,12 +392,8 @@ namespace MajdataEdit.SyntaxModule
                 return true;
             //else if(noteStr == "E")
             //    return true;
-            ErrorList.Add(new SimaiErrorInfo(posX, posY,
-                    string.Format(
-                        MainWindow.GetLocalizedString("SyntaxError"),
-                        noteStr,
-                        posY,
-                        posX)));
+            ErrorList.Add(new Error(ErrorType.Syntax, new Position(posX, posY),
+                    string.Format(MainWindow.GetLocalizedString("SyntaxError"),noteStr),null));
             return false;
 
         }
