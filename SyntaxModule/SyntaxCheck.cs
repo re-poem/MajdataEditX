@@ -126,7 +126,7 @@ namespace MajdataEdit.SyntaxModule
             Action<string> addError = s =>
             {
                 ErrorList.Add(new Error(ErrorType.Syntax, new Position(posX, posY),
-                    string.Format(MainWindow.GetLocalizedString("SyntaxError"), s), null));
+                    string.Format(MainWindow.GetLocalizedString("SyntaxError"), s), "BPM/拍号不合法"));
             };
 
             for (int i = 0; i < simaiStr.Length; i++)

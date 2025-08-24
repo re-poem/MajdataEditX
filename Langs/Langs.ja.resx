@@ -527,6 +527,12 @@ Open Browser to download latest update of Majdata?</value>
     <value>内部エラー</value>
   </data>
   <data name="SyntaxWarning" xml:space="preserve">
-    <value>[警告] チャートは「E」で終わる必要があります : "{0}"</value>
+    <value>[Syntax警告] チャートは「E」で終わる必要があります : "{0}"</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>ポジション</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>メッセージ</value>
   </data>
 </root>

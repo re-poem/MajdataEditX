@@ -7,6 +7,7 @@ namespace MajdataEdit;
 /// <summary>
 ///     Window1.xaml 的交互逻辑
 /// </summary>
+[Obsolete("ErrorInfo is Obsolete,Use Error")]
 public class ErrorInfo
 {
     public int positionX;
@@ -19,6 +20,7 @@ public class ErrorInfo
     }
 }
 
+[Obsolete("MuriCheckResult is Obsolete,Use ErrorList(ErrorListWindow)")]
 public partial class MuriCheckResult : Window
 {
     public List<ErrorInfo> errorPosition = new();

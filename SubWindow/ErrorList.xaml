@@ -38,9 +38,9 @@
                   CellStyle="{Binding Mode=OneWay, Source={StaticResource ItemStyle}}" 
                   SelectionChanged="ErrorListView_SelectionChanged" MouseDoubleClick="ErrorListView_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn CanUserResize="False" CanUserReorder="False" IsReadOnly="True" Visibility="Visible" Width="40" Binding="{Binding Type}" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource HeaderStyle}}"/>
-                <DataGridTextColumn CanUserResize="False" CanUserReorder="False" IsReadOnly="True" Visibility="Visible" Width="50" Header="Pos" Binding="{Binding Position}" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource HeaderStyle}}"/>
-                <DataGridTextColumn CanUserResize="False" CanUserReorder="False" IsReadOnly="True" Visibility="Visible" Width="*" Header="Message" Binding="{Binding Message}" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource HeaderStyle}}"/>
+                <DataGridTextColumn CanUserResize="False" CanUserReorder="False" IsReadOnly="True" Visibility="Visible" Width="50" Binding="{Binding Type}" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource HeaderStyle}}"/>
+                <DataGridTextColumn CanUserResize="False" CanUserReorder="False" IsReadOnly="True" Visibility="Visible" Width="60" Header="{lex:Loc Key=Position}" Binding="{Binding Position}" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource HeaderStyle}}"/>
+                <DataGridTextColumn CanUserResize="False" CanUserReorder="False" IsReadOnly="True" Visibility="Visible" Width="*" Header="{lex:Loc Key=Message}" Binding="{Binding Message}" HeaderStyle="{Binding Mode=OneWay, Source={StaticResource HeaderStyle}}"/>
             </DataGrid.Columns>
         </DataGrid>
         <TextBox x:Name="txtDetail" Grid.Row="1" TextWrapping="Wrap" Background="{Binding Mode=OneWay, Source={StaticResource ButtonsBackground}}" Foreground="#FFCFCDC5" IsReadOnly="True"/>

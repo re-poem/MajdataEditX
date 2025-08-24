@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -18,8 +19,8 @@ namespace MajdataEdit
     public enum ErrorType
     {
         Info,
-        Muri,
-        MuriDX,
+        MuriDXS,
+        MuriDXD,
         Syntax,
         Other
     }
@@ -73,6 +74,11 @@ namespace MajdataEdit
             Error error = (ErrorListView.SelectedItem as Error)!;
             ((MainWindow)Owner).ScrollToFumenContentSelection(error.Position.x, error.Position.y - 1);
             ((MainWindow)Owner).Activate();
+        }
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            this.Hide();
+            e.Cancel = true;
         }
     }
 }

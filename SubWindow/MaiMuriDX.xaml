@@ -9,7 +9,7 @@
         lex:ResxLocalizationProvider.DefaultDictionary="Langs"
         mc:Ignorable="d"
         Background="{DynamicResource WindowBackground}"
-        Title="{lex:Loc Key=LaunchMaiMuriDX}" Height="73" Width="274" ResizeMode="NoResize" Loaded="Window_Loaded"
+        Title="{lex:Loc Key=LaunchMaiMuriDX}" Height="75" Width="274" ResizeMode="NoResize" Loaded="Window_Loaded"
         WindowStartupLocation="CenterOwner" Initialized="Window_Initialized">
     <Window.Resources>
 

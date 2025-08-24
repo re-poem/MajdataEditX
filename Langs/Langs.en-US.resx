@@ -497,6 +497,12 @@ Click OK to start render.</value>
     <value>Internal Error</value>
   </data>
   <data name="SyntaxWarning" xml:space="preserve">
-    <value>[Warning] The chart should end with "E" : "{0}"</value>
+    <value>[SyntaxWarning] The chart should end with "E" : "{0}"</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Pos</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
   </data>
 </root>

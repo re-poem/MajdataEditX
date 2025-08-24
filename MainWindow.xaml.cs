@@ -312,7 +312,7 @@ public partial class MainWindow : Window
         SyntaxChecker.ScanAsync(GetRawFumenText()).ContinueWith(t =>
         {
             SetErrCount(SyntaxChecker.GetErrorCount());
-            Dispatcher.Invoke(() => { ShowErrorWindow(); });
+            Dispatcher.Invoke(() => { ShowSyntaxError(); });
         });
 #else
         try
@@ -320,7 +320,7 @@ public partial class MainWindow : Window
             SyntaxChecker.ScanAsync(GetRawFumenText()).ContinueWith(t =>
             {
                 SetErrCount(SyntaxChecker.GetErrorCount());
-                Dispatcher.Invoke(() => { ShowErrorWindow(); });
+                Dispatcher.Invoke(() => { ShowSyntaxError(); });
             });
         }
         catch
@@ -332,9 +332,33 @@ public partial class MainWindow : Window
     private void MaiMuriDXButton_Click(object sender, RoutedEventArgs e)
     {
         LaunchMaiMuriDX window = new(new RunArg(GetRawFumenText(), float.Parse(OffsetTextBox.Text), audioDir, false));
+        window.Owner = this;
         window.Show();
     }
-    void ShowErrorWindow()
+    public void ShowMuriDXError(LaunchMaiMuriDX lmmdWindow)
+    {
+        for (int i = errorListWindow.ErrorListView.Items.Count - 1; i >= 0; i--)
+        {
+            if ((errorListWindow.ErrorListView.Items[i] as Error)!.Type is ErrorType.MuriDXS or ErrorType.MuriDXD)
+            {
+                errorListWindow.ErrorListView.Items.RemoveAt(i);
+            }
+        }
+        var errList = lmmdWindow.SErrorList;
+        errList.ForEach(e =>
+        {
+            errorListWindow.ErrorListView.Items.Add(e);
+        });
+        if (errorListWindow.IsVisible)
+        {
+            errorListWindow.Activate();//之前已打开，则给予焦点，置顶。
+        }
+        else
+        {
+            errorListWindow.Show();//如果之前未打开，则打开。
+        }
+    }
+    void ShowSyntaxError()
     {
         for (int i = errorListWindow.ErrorListView.Items.Count - 1; i >= 0; i--)
         {
@@ -348,7 +372,14 @@ public partial class MainWindow : Window
         {
             errorListWindow.ErrorListView.Items.Add(e);
         });
-        errorListWindow.Show();
+        if (errorListWindow.IsVisible)
+        {
+            errorListWindow.Activate();//之前已打开，则给予焦点，置顶。
+        }
+        else
+        {
+            errorListWindow.Show();//如果之前未打开，则打开。
+        }
     }
     private void SyntaxCheckButton_Click(object sender, MouseButtonEventArgs e)
     {
@@ -356,7 +387,7 @@ public partial class MainWindow : Window
         SyntaxChecker.ScanAsync(GetRawFumenText()).ContinueWith(t =>
         {
             SetErrCount(SyntaxChecker.GetErrorCount());
-            Dispatcher.Invoke(() => { ShowErrorWindow(); });
+            Dispatcher.Invoke(() => { ShowSyntaxError(); });
         });
 #else
         try
@@ -364,7 +395,7 @@ public partial class MainWindow : Window
             SyntaxChecker.ScanAsync(GetRawFumenText()).ContinueWith(t =>
             {
                 SetErrCount(SyntaxChecker.GetErrorCount());
-                Dispatcher.Invoke(() => { ShowErrorWindow(); });
+                Dispatcher.Invoke(() => { ShowSyntaxError(); });
             });
         }
         catch

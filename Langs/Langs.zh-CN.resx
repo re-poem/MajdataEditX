@@ -489,6 +489,12 @@
     <value>内部错误</value>
   </data>
   <data name="SyntaxWarning" xml:space="preserve">
-    <value>[警告] 谱面应当以"E"结尾："{0}"</value>
+    <value>[语法警告] 谱面应当以"E"结尾："{0}"</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>信息</value>
   </data>
 </root>
