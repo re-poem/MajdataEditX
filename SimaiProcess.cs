@@ -162,6 +162,29 @@ internal static class SimaiProcess
                     continue;
                 }
 
+                if (text[i] == '$' && i + 1 < text.Length && text[i + 1] == '$')
+                {
+                    // 跳过自定义代码行
+                    Xcount++;
+
+                    string customCmd = "";
+                    while (i < text.Length && text[i] != '\n')
+                    {
+                        customCmd += text[i];
+                        i++;
+                        Xcount++;
+                    }
+
+                    _notelist.Add(new SimaiTimingPoint(time, Xcount, Ycount, customCmd, bpm)
+                    {
+                        noteList = new List<SimaiNote>() { new SimaiNote { noteType = SimaiNoteType.NoneOrCmd, noteContent = customCmd} }
+                    });
+
+                    Ycount++;
+                    Xcount = 0;
+                    continue;
+                }
+
                 if (text[i] == '\n')
                 {
                     Ycount++;
@@ -370,6 +393,7 @@ internal class SimaiTimingPoint
                 return simaiNotes;
             }
 
+
             simaiNotes.Add(getSingleNote(notesContent));
             noteList = simaiNotes;
             return simaiNotes;
@@ -521,44 +545,50 @@ internal class SimaiTimingPoint
             simaiNote.isMute = true;
         }
 
-        //custon skin
+        //custom skin
         if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('c'))
         {
             simaiNote.customSkin = getCustomSkinPath(noteText);
         }
-/******************
-* custom skin如何使用：（优先级从大到小执行）
-* tap：将tap贴图直接替换为路径内图片（因此，伪双押tap可填入tap_each.png做到真 伪双押的效果）
-* hold：将hold贴图直接替换为路径内图片，hold_on贴图自动在文件名（含each和break）后面加上"_on"进行读取（优先级1），off同上
-* touch：将touch贴图直接替换为路径内图片，注意贴图应是四个之一，暂不支持不同方向使用不同贴图，touch_border贴图自动在文件名后面加上"_border_2"和"_border_3"进行读取（优先级3），
-* touch_just，touch_point贴图同上
-* touch_hold：将touch_hold贴图替换为路径内图片，路径应填"_0","_1","_2","_3",前面的那一部分，由程序自动读取（优先级1），border贴图自动在文件名后面加上"_border"进行读取（优先级3）
-* star：将star贴图直接替换为路径内图片，star_double贴图自动在文件名（含each和break）后面加上"_double"进行读取（优先级1）
-* slide：将slide贴图直接替换为路径内图片，注意贴图是星星的一个箭头
-* wifi：将wifi贴图直接替换为路径内图片，路径应填"_0","_1" ... "_9","_10",前面的那一部分，由程序自动读取（优先级1）
-* 
-* each：自动在文件名后面加上"_each"进行读取（优先级2）（因此，如在需要each tap用单tap皮肤时，需要自己将单tap皮肤复制一份例如abc_each.png，然后填入abc.png即可）
-* break：自动在文件名后面加上"_break"进行读取（优先级2）(注意没有each_break这一说)
-* ex：自动在文件名后面加上"_ex"进行读取，注意贴图应是外面的发光层的叠加图
-******************/
-/******************
-* How to use custom skins: (Execute in descending order of priority)
-* tap: Directly replaces the tap texture with the image in the path (therefore, a pseudo-double tap can be created by filling in tap_each.png to achieve a true pseudo-double tap effect)
-* hold: Directly replaces the hold texture with the image in the path. The hold_on texture is automatically loaded by appending "_on" to the file name (including "each" and "break") (priority 1). 
-*       The off texture is the same as above.
-* touch: Directly replaces the touch texture with the image in the path. Note that the texture must be one of four. Using different textures for different orientations is not currently supported.
-*       The touch_border texture is automatically loaded by appending "_border_2" and "_border_3" to the file name (priority 3). The touch_just and touch_point textures are the same as above.
-* touch_hold: Replaces the touch_hold texture with the image in the path. The path should be "_0," "_1," "_2," "_3," and the beginning of the path. 
-*        The program automatically reads the texture (priority 1). Border textures are automatically read by appending "_border" to the end of the file name (priority 3).
-* star: Replaces the star texture with the image in the path. Star_double textures are automatically read by appending "_double" to the end of the file name (including "each" and "break"). (Priority 1)
-* slide: Replaces the slide texture with the image in the path. Note that the texture is a star with an arrow.
-* wifi: Replaces the wifi texture with the image in the path. The path should be "_0," "_1," ..., "_9," "_10," and the beginning of the path. The program automatically reads the texture (priority 1).
-*
-* each: Automatically reads the texture by appending "_each" to the end of the file name (priority 2). (Therefore, if you need a single-tap skin for each tap, you need to copy the single-tap skin, 
-*       such as abc_each.png, and then fill in abc.png.)
-* break: Automatically appends "_break" to the end of the file name for reading (priority 2)
-* ex: Automatically appends "_ex" to the end of the file name for reading. Note that the texture should be an overlay of the outer luminous layer.
-******************/
+        /******************
+        * custom skin如何使用：（优先级从大到小执行）
+        * tap：将tap贴图直接替换为路径内图片（因此，伪双押tap可填入tap_each.png做到真 伪双押的效果）
+        * hold：将hold贴图直接替换为路径内图片，hold_on贴图自动在文件名（含each和break）后面加上"_on"进行读取（优先级1），off同上
+        * touch：将touch贴图直接替换为路径内图片，注意贴图应是四个之一，暂不支持不同方向使用不同贴图，touch_border贴图自动在文件名后面加上"_border_2"和"_border_3"进行读取（优先级3），
+        * touch_just，touch_point贴图同上
+        * touch_hold：将touch_hold贴图替换为路径内图片，路径应填"_0","_1","_2","_3",前面的那一部分，由程序自动读取（优先级1），border贴图自动在文件名后面加上"_border"进行读取（优先级3）
+        * star：将star贴图直接替换为路径内图片，star_double贴图自动在文件名（含each和break）后面加上"_double"进行读取（优先级1）
+        * slide：将slide贴图直接替换为路径内图片，注意贴图是星星的一个箭头
+        * wifi：将wifi贴图直接替换为路径内图片，路径应填"_0","_1" ... "_9","_10",前面的那一部分，由程序自动读取（优先级1）
+        * 
+        * each：自动在文件名后面加上"_each"进行读取（优先级2）（因此，如在需要each tap用单tap皮肤时，需要自己将单tap皮肤复制一份例如abc_each.png，然后填入abc.png即可）
+        * break：自动在文件名后面加上"_break"进行读取（优先级2）(注意没有each_break这一说)
+        * ex：自动在文件名后面加上"_ex"进行读取，注意贴图应是外面的发光层的叠加图
+        ******************/
+        /******************
+        * How to use custom skins: (Execute in descending order of priority)
+        * tap: Directly replaces the tap texture with the image in the path (therefore, a pseudo-double tap can be created by filling in tap_each.png to achieve a true pseudo-double tap effect)
+        * hold: Directly replaces the hold texture with the image in the path. The hold_on texture is automatically loaded by appending "_on" to the file name (including "each" and "break") (priority 1). 
+        *       The off texture is the same as above.
+        * touch: Directly replaces the touch texture with the image in the path. Note that the texture must be one of four. Using different textures for different orientations is not currently supported.
+        *       The touch_border texture is automatically loaded by appending "_border_2" and "_border_3" to the file name (priority 3). The touch_just and touch_point textures are the same as above.
+        * touch_hold: Replaces the touch_hold texture with the image in the path. The path should be "_0," "_1," "_2," "_3," and the beginning of the path. 
+        *        The program automatically reads the texture (priority 1). Border textures are automatically read by appending "_border" to the end of the file name (priority 3).
+        * star: Replaces the star texture with the image in the path. Star_double textures are automatically read by appending "_double" to the end of the file name (including "each" and "break"). (Priority 1)
+        * slide: Replaces the slide texture with the image in the path. Note that the texture is a star with an arrow.
+        * wifi: Replaces the wifi texture with the image in the path. The path should be "_0," "_1," ..., "_9," "_10," and the beginning of the path. The program automatically reads the texture (priority 1).
+        *
+        * each: Automatically reads the texture by appending "_each" to the end of the file name (priority 2). (Therefore, if you need a single-tap skin for each tap, you need to copy the single-tap skin, 
+        *       such as abc_each.png, and then fill in abc.png.)
+        * break: Automatically appends "_break" to the end of the file name for reading (priority 2)
+        * ex: Automatically appends "_ex" to the end of the file name for reading. Note that the texture should be an overlay of the outer luminous layer.
+        ******************/
+
+        //force-miss(unplayable)
+        if (Regex.Replace(noteText, "\"(.*?)\"", "").Contains('u'))
+        {
+            simaiNote.isUnplayable = true;
+        }
 
         simaiNote.noteContent = noteText;
         return simaiNote;
@@ -703,7 +733,8 @@ internal enum SimaiNoteType
     Slide,
     Hold,
     Touch,
-    TouchHold
+    TouchHold,
+    NoneOrCmd
 }
 
 internal class SimaiNote
@@ -717,6 +748,7 @@ internal class SimaiNote
     public bool isSlideBreak;
     public bool isSlideNoHead;
     public bool isMute; 
+    public bool isUnplayable;
 
     public string? noteContent; //used for star explain
     public SimaiNoteType noteType;

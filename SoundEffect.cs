@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Timers;
+using System.Windows.Controls;
 using Un4seen.Bass;
 using Timer = System.Timers.Timer;
 
@@ -236,8 +237,7 @@ public partial class MainWindow
                         if (!note.isBreak && !note.isEx)
                             // 如果二者皆没有 则是普通note 播放普通判定音
                             stobj.hasJudge = true;
-                        if (note.isMute) 
-                            stobj.isMute = true;
+                        stobj.isMute = note.isMute;
                         break;
                     }
                     case SimaiNoteType.Hold:
@@ -268,11 +268,11 @@ public partial class MainWindow
                             {
                                 // 只有最普通的Hold才有结尾的判定音 Break和Ex型则没有（Break没有为推定）
                                 var holdRelease = new SoundEffectTiming(targetTime, true, !note.isBreak && !note.isEx);
+                                holdRelease.isMute = note.isMute;
                                 waitToBePlayed.Add(holdRelease);
                             }
                         }
-                        if (note.isMute)
-                            stobj.isMute = true;
+                        stobj.isMute = note.isMute;
                         break;
                     }
                     case SimaiNoteType.Slide:
@@ -289,7 +289,7 @@ public partial class MainWindow
 
                             if (note.isEx) stobj.hasJudgeEx = true;
                             if (!note.isBreak && !note.isEx) stobj.hasJudge = true;
-                            if (note.isMute) stobj.isMute = true;
+                            stobj.isMute = note.isMute;
                         }
 
                         // Slide启动音效
@@ -308,12 +308,18 @@ public partial class MainWindow
                         {
                             SoundEffectTiming slide;
                             if (note.isSlideBreak)
-                                slide = new SoundEffectTiming(targetTime, _hasBreakSlideStart: true);
+                                slide = new SoundEffectTiming(targetTime, _hasBreakSlideStart: true) 
+                                { 
+                                    isMute = note.isMute
+                                };
                             else
-                                slide = new SoundEffectTiming(targetTime, _hasSlide: true);
-                            waitToBePlayed.Add(slide);
+                                slide = new SoundEffectTiming(targetTime, _hasSlide: true)
+                                {
+                                    isMute = note.isMute
+                                };
+                                waitToBePlayed.Add(slide);
                         }
-                        if (note.isMute) stobj.isMute = true;
+                        stobj.isMute = note.isMute;
 
                         // Slide尾巴 如果是Break Slide的话 就要添加一个Break音效
                         if (note.isSlideBreak)
@@ -340,7 +346,7 @@ public partial class MainWindow
                         stobj.hasAnswer = true;
                         stobj.hasTouch = true;
                         if (note.isHanabi) stobj.hasHanabi = true;
-                        if (note.isMute) stobj.isMute = true;
+                        stobj.isMute = note.isMute;
                         break;
                     }
                     case SimaiNoteType.TouchHold:
@@ -363,7 +369,7 @@ public partial class MainWindow
                                 _hasTouchHoldEnd: true);
                             waitToBePlayed.Add(tHoldRelease);
                         }
-                        if (note.isMute) stobj.isMute = true;
+                        stobj.isMute = note.isMute;
                         break;
                     }
                 }
