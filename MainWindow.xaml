@@ -30,25 +30,6 @@
             <ColumnDefinition Width="360*" />
         </Grid.ColumnDefinitions>
 
-        <Label x:Name="ErrCount" Grid.Column="1" Content="0" 
-            Foreground="White" 
-            HorizontalAlignment="Left" HorizontalContentAlignment="Center"
-            Margin="44,201,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="53" Height="25" PreviewMouseDoubleClick="SyntaxCheckButton_Click"/>
-
-        <Label x:Name="ErrCount_Label" Content="Error" 
-               Foreground="White" 
-               HorizontalAlignment="Left" HorizontalContentAlignment="Left"
-               Margin="2,201,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="45" PreviewMouseDoubleClick="SyntaxCheckButton_Click" Grid.Column="1" RenderTransformOrigin="0.5,0.5">
-            <Label.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="0.647"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Label.RenderTransform>
-        </Label>
-
         <Image x:Name="MusicWave" Height="74" VerticalAlignment="Bottom" MouseWheel="MusicWave_MouseWheel"
                PreviewMouseLeftButtonDown="MusicWave_PreviewMouseLeftButtonDown" MouseMove="MusicWave_MouseMove"
                Grid.ColumnSpan="3" SizeChanged="MusicWave_SizeChanged" Grid.RowSpan="2" Grid.Row="1" />
@@ -95,10 +76,6 @@
             <MenuItem Header="{lex:Loc Tools}" Foreground="{DynamicResource ButtonForeground}"
                       Template="{DynamicResource DarkMenuItem}">
                 <MenuItem Header="{lex:Loc BPMtap}" Click="BPMtap_MenuItem_Click" />
-                <MenuItem x:Name="MenuMuriCheck" Header="{lex:Loc MapMuriDetc}" Click="MuriCheck_Click_1"
-                          IsEnabled="False" />
-                <MenuItem x:Name="SyntaxCheckButton" Header="{lex:Loc SyntaxDisplay}" Click="SyntaxCheckButton_Click"
-                          IsEnabled="False" />
             </MenuItem>
             <MenuItem Header="Majnet" Click="MenuItem_Majnet_Click"
                       Foreground="{DynamicResource ButtonForeground}" Template="{DynamicResource DarkMenuItem}" />

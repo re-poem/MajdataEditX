@@ -217,6 +217,7 @@ public partial class MainWindow
                 {
                     case SimaiNoteType.Tap:
                     {
+                        if (note.isMute) break;
                         stobj.hasAnswer = true;
                         if (note.isBreak)
                         {
@@ -235,6 +236,7 @@ public partial class MainWindow
                     }
                     case SimaiNoteType.Hold:
                     {
+                        if (note.isMute) break;
                         stobj.hasAnswer = true;
                         // 类似于Tap 判断Break和Ex的音效 二者皆无则为普通
                         if (note.isBreak)
@@ -269,7 +271,7 @@ public partial class MainWindow
                     }
                     case SimaiNoteType.Slide:
                     {
-                        if (!note.isSlideNoHead)
+                        if (!note.isSlideNoHead && !note.isMute)
                         {
                             // 当Slide不是无头星星的时候 才有answer音和判定音
                             stobj.hasAnswer = true;
@@ -284,6 +286,7 @@ public partial class MainWindow
                         }
 
                         // Slide启动音效
+                        if (note.isSlideMute) break;
                         var targetTime = note.slideStartTime;
                         var nearIndex = waitToBePlayed.FindIndex(o => Math.Abs(o.time - targetTime) < 0.001f);
                         if (nearIndex != -1)
@@ -322,11 +325,11 @@ public partial class MainWindow
                                 waitToBePlayed.Add(slide);
                             }
                         }
-
                         break;
                     }
                     case SimaiNoteType.Touch:
                     {
+                        if (note.isMute) break;
                         stobj.hasAnswer = true;
                         stobj.hasTouch = true;
                         if (note.isHanabi) stobj.hasHanabi = true;
@@ -334,6 +337,7 @@ public partial class MainWindow
                     }
                     case SimaiNoteType.TouchHold:
                     {
+                        if (note.isMute) break;
                         stobj.hasAnswer = true;
                         stobj.hasTouch = true;
                         stobj.hasTouchHold = true;

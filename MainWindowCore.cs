@@ -322,38 +322,11 @@ public partial class MainWindow : Window
         Cover.Visibility = Visibility.Collapsed;
         MenuEdit.IsEnabled = true;
         VolumnSetting.IsEnabled = true;
-        MenuMuriCheck.IsEnabled = true;
         Menu_ExportRender.IsEnabled = true;
-        SyntaxCheckButton.IsEnabled = true;
         AutoSaveManager.Of().SetAutoSaveEnable(true);
         SetSavedState(true);
         //SyntaxCheck();
     }
-
-    internal async void SyntaxCheck()
-    {
-        if (editorSetting!.SyntaxCheckLevel == 0)
-        {
-            SetErrCount(GetLocalizedString("SyntaxCheckLevel1"));
-            return;
-        }
-#if DEBUG
-        await SyntaxChecker.ScanAsync(GetRawFumenText());
-        SetErrCount(SyntaxChecker.GetErrorCount());
-#else
-        try
-        {
-            await SyntaxChecker.ScanAsync(GetRawFumenText());
-            SetErrCount(SyntaxChecker.ErrorList.Count);
-        }
-        catch
-        {
-            SetErrCount(GetLocalizedString("InternalErr"));
-        }
-#endif
-
-    }
-    void SetErrCount<T>(T eCount) => Dispatcher.Invoke(() => ErrCount.Content = $"{eCount}");
     private void ReadWaveFromFile()
     {
         var useOgg = File.Exists(maidataDir + "/track.ogg");
@@ -781,7 +754,7 @@ public partial class MainWindow : Window
                 if (note == null) break;
                 if (note.time - currentTime > deltatime) continue;
                 var notes = note.getNotes();
-                var isEach = notes.Count(o => !o.isSlideNoHead && !o.isMine) > 1;
+                var isEach = notes.Count(o => !o.isSlideNoHead) > 1;
 
                 var x = ((float)(note.time / step) - startindex) * linewidth;
 
@@ -809,9 +782,7 @@ public partial class MainWindow : Window
                         if (noteD.isForceStar)
                         {
                             pen.Width = 3;
-                            if (noteD.isMine)
-                                pen.Color = Color.LightGray;
-                            else if (noteD.isBreak)
+                            if (noteD.isBreak)
                                 pen.Color = Color.OrangeRed;
                             else if (isEach)
                                 pen.Color = Color.Gold;
@@ -824,9 +795,7 @@ public partial class MainWindow : Window
                         else
                         {
                             pen.Width = 2;
-                            if (noteD.isMine)
-                                pen.Color = Color.LightGray;
-                            else if (noteD.isBreak)
+                            if (noteD.isBreak)
                                 pen.Color = Color.OrangeRed;
                             else if (isEach)
                                 pen.Color = Color.Gold;
@@ -839,9 +808,7 @@ public partial class MainWindow : Window
                     if (noteD.noteType == SimaiNoteType.Touch)
                     {
                         pen.Width = 2;
-                        if (noteD.isMine)
-                            pen.Color = Color.LightGray;
-                        else if (isEach)
+                        if (isEach)
                             pen.Color = Color.Gold;
                         else
                             pen.Color = Color.DeepSkyBlue;
@@ -851,9 +818,7 @@ public partial class MainWindow : Window
                     if (noteD.noteType == SimaiNoteType.Hold)
                     {
                         pen.Width = 3;
-                        if (noteD.isMine)
-                            pen.Color = Color.LightGray;
-                        else if (noteD.isBreak)
+                        if (noteD.isBreak)
                             pen.Color = Color.OrangeRed;
                         else if (isEach)
                             pen.Color = Color.Gold;
@@ -878,14 +843,10 @@ public partial class MainWindow : Window
                         if (xDelta < 1f) xDelta = 1;
                         //
                         pen.Color = Color.FromArgb(200, 255, 75, 0);
-                        if (noteD.isMine)
-                            pen.Color = Color.LightGray;
                         graphics.DrawLine(pen, x, y, x + xDelta * 4f, y);
                         pen.Color = Color.FromArgb(200, 255, 241, 0);
                         graphics.DrawLine(pen, x, y, x + xDelta * 3f, y);
                         pen.Color = Color.FromArgb(200, 2, 165, 89);
-                        if (noteD.isMine)
-                            pen.Color = Color.Gray;
                         graphics.DrawLine(pen, x, y, x + xDelta * 2f, y);
                         pen.Color = Color.FromArgb(200, 0, 140, 254);
                         graphics.DrawLine(pen, x, y, x + xDelta, y);
@@ -896,9 +857,7 @@ public partial class MainWindow : Window
                         pen.Width = 3;
                         if (!noteD.isSlideNoHead)
                         {
-                            if (noteD.isMine)
-                                pen.Color = Color.LightGray;
-                            else if (noteD.isBreak)
+                            if (noteD.isBreak)
                                 pen.Color = Color.OrangeRed;
                             else if (isEach)
                                 pen.Color = Color.Gold;
@@ -908,11 +867,9 @@ public partial class MainWindow : Window
                             graphics.DrawString("*", new Font("Consolas", 12, System.Drawing.FontStyle.Bold), brush,
                                 new PointF(x - 7f, y - 7f));
                         }
-                        if (noteD.isSlideMine)
-                            pen.Color = Color.LightGray;
-                        else if (noteD.isSlideBreak)
+                        if (noteD.isSlideBreak)
                             pen.Color = Color.OrangeRed;
-                        else if (notes.Count(o => o.noteType == SimaiNoteType.Slide && !o.isSlideMine) >= 2)
+                        else if (notes.Count(o => o.noteType == SimaiNoteType.Slide) >= 2)
                             pen.Color = Color.Gold;
                         else
                             pen.Color = Color.SkyBlue;

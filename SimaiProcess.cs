@@ -534,7 +534,7 @@ internal class SimaiTimingPoint
         {
             if (simaiNote.noteType == SimaiNoteType.Slide)
             {
-                // 如果是Slide 则要检查这个b到底是星星头的还是Slide本体的
+                // 如果是Slide 则要检查这个m到底是星星头的还是Slide本体的
 
                 // !!! **SHIT CODE HERE** !!!
                 var startIndex = 0;
@@ -542,18 +542,18 @@ internal class SimaiTimingPoint
                 {
                     if (startIndex < noteText.Length - 1)
                     {
-                        // 如果b不是最后一个字符 我们就检查b之后一个字符是不是`[`符号：如果是 那么就是break slide
+                        // 如果b不是最后一个字符 我们就检查b之后一个字符是不是`[`符号：如果是 那么就是mute slide
                         if (noteText[startIndex + 1] == '[')
-                            simaiNote.isSlideMine = true;
+                            simaiNote.isSlideMute = true;
                         else
-                            // 否则 那么不管这个break出现在slide的哪一个地方 我们都认为他是星星头的break
+                            // 否则 那么不管这个mute出现在slide的哪一个地方 我们都认为他是星星头的mute
                             // SHIT CODE!
-                            simaiNote.isMine = true;
+                            simaiNote.isMute = true;
                     }
                     else
                     {
-                        // 如果b符号是整个文本的最后一个字符 那么也是break slide（Simai语法）
-                        simaiNote.isSlideMine = true;
+                        // 如果b符号是整个文本的最后一个字符 那么也是mute slide（Simai语法）
+                        simaiNote.isSlideMute = true;
                     }
 
                     startIndex++;
@@ -561,8 +561,8 @@ internal class SimaiTimingPoint
             }
             else
             {
-                // 除此之外的Break就无所谓了
-                simaiNote.isMine = true;
+                // 除此之外的mute就无所谓了
+                simaiNote.isMute = true;
             }
             noteText = noteText.Replace("m", "");
         }
@@ -728,12 +728,12 @@ internal class SimaiNote
     public double holdTime;
     public bool isBreak;
     public bool isEx;
-    public bool isMine;
+    public bool isMute;
     public bool isFakeRotate;
     public bool isForceStar;
     public bool isHanabi;
     public bool isSlideBreak;
-    public bool isSlideMine;
+    public bool isSlideMute;
     public bool isSlideNoHead;
     public bool canSVAffect = true;
 
