@@ -113,20 +113,57 @@ public partial class MainWindow
                 var se = waitToBePlayed[0];
                 waitToBePlayed.RemoveAt(0);
 
-                if (se.hasAnswer) Bass.BASS_ChannelPlay(answerStream, true);
-                if (se.hasJudge) Bass.BASS_ChannelPlay(judgeStream, true);
-                if (se.hasJudgeBreak) Bass.BASS_ChannelPlay(judgeBreakStream, true);
-                if (se.hasJudgeEx) Bass.BASS_ChannelPlay(judgeExStream, true);
-                if (se.hasBreak) Bass.BASS_ChannelPlay(breakStream, true);
-                if (se.hasTouch) Bass.BASS_ChannelPlay(touchStream, true);
-                if (se.hasHanabi) //may cause delay
-                    Bass.BASS_ChannelPlay(hanabiStream, true);
-                if (se.hasTouchHold) Bass.BASS_ChannelPlay(holdRiserStream, true);
-                if (se.hasTouchHoldEnd) Bass.BASS_ChannelStop(holdRiserStream);
-                if (se.hasSlide) Bass.BASS_ChannelPlay(slideStream, true);
-                if (se.hasBreakSlideStart) Bass.BASS_ChannelPlay(breakSlideStartStream, true);
-                if (se.hasBreakSlide) Bass.BASS_ChannelPlay(breakSlideStream, true);
-                if (se.hasJudgeBreakSlide) Bass.BASS_ChannelPlay(judgeBreakSlideStream, true);
+                if (string.IsNullOrEmpty(se.kWav))
+                {
+                    if (se.hasAnswer) Bass.BASS_ChannelPlay(answerStream, true);
+                    if (se.hasJudge) Bass.BASS_ChannelPlay(judgeStream, true);
+                    if (se.hasJudgeBreak) Bass.BASS_ChannelPlay(judgeBreakStream, true);
+                    if (se.hasJudgeEx) Bass.BASS_ChannelPlay(judgeExStream, true);
+                    if (se.hasBreak) Bass.BASS_ChannelPlay(breakStream, true);
+                    if (se.hasTouch) Bass.BASS_ChannelPlay(touchStream, true);
+                    if (se.hasHanabi) //may cause delay
+                        Bass.BASS_ChannelPlay(hanabiStream, true);
+                    if (se.hasTouchHold) Bass.BASS_ChannelPlay(holdRiserStream, true);
+                    if (se.hasTouchHoldEnd) Bass.BASS_ChannelStop(holdRiserStream);
+                    if (se.hasSlide) Bass.BASS_ChannelPlay(slideStream, true);
+                    if (se.hasBreakSlideStart) Bass.BASS_ChannelPlay(breakSlideStartStream, true);
+                    if (se.hasBreakSlide) Bass.BASS_ChannelPlay(breakSlideStream, true);
+                    if (se.hasJudgeBreakSlide) Bass.BASS_ChannelPlay(judgeBreakSlideStream, true);
+                }
+                else
+                {
+                    var path = Environment.CurrentDirectory + "/SFX/";
+                    var _answerStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_answer"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _judgeStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_judge"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _judgeBreakStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_judge_break"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _judgeExStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_judge_ex"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _breakStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_break"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _hanabiStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "hanabi"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _holdRiserStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_touchHold_riser"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _slideStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_slide"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _touchStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_touch"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _fanfareStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_fanfare"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _breakSlideStartStream =
+                        Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_break_slide_start"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _breakSlideStream = Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_break_slide"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    var _judgeBreakSlideStream =
+                        Bass.BASS_StreamCreateFile(path + se.kWav.Insert(se.kWav.Length - 4, "_judge_break_slide"), 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT);
+                    if (se.hasAnswer) Bass.BASS_ChannelPlay(_answerStream, true);
+                    if (se.hasJudge) Bass.BASS_ChannelPlay(_judgeStream, true);
+                    if (se.hasJudgeBreak) Bass.BASS_ChannelPlay(_judgeBreakStream, true);
+                    if (se.hasJudgeEx) Bass.BASS_ChannelPlay(_judgeExStream, true);
+                    if (se.hasBreak) Bass.BASS_ChannelPlay(_breakStream, true);
+                    if (se.hasTouch) Bass.BASS_ChannelPlay(_touchStream, true);
+                    if (se.hasHanabi) //may cause delay
+                        Bass.BASS_ChannelPlay(_hanabiStream, true);
+                    if (se.hasTouchHold) Bass.BASS_ChannelPlay(_holdRiserStream, true);
+                    if (se.hasTouchHoldEnd) Bass.BASS_ChannelStop(_holdRiserStream);
+                    if (se.hasSlide) Bass.BASS_ChannelPlay(_slideStream, true);
+                    if (se.hasBreakSlideStart) Bass.BASS_ChannelPlay(_breakSlideStartStream, true);
+                    if (se.hasBreakSlide) Bass.BASS_ChannelPlay(_breakSlideStream, true);
+                    if (se.hasJudgeBreakSlide) Bass.BASS_ChannelPlay(_judgeBreakSlideStream, true);
+                }
+
                 if (se.hasAllPerfect)
                 {
                     Bass.BASS_ChannelPlay(allperfectStream, true);
@@ -136,13 +173,13 @@ public partial class MainWindow
                 if (se.hasClock) Bass.BASS_ChannelPlay(clockStream, true);
                 //
                 Dispatcher.Invoke(() =>
-                {
-                    if ((bool)FollowPlayCheck.IsChecked!)
                     {
-                        ghostCusorPositionTime = (float)nearestTime;
-                        SeekTextFromIndex(se.noteGroupIndex);
-                    }
-                });
+                        if ((bool)FollowPlayCheck.IsChecked!)
+                        {
+                            ghostCusorPositionTime = (float)nearestTime;
+                            SeekTextFromIndex(se.noteGroupIndex);
+                        }
+                    });
             }
         }
         catch
@@ -218,6 +255,7 @@ public partial class MainWindow
                     case SimaiNoteType.Tap:
                     {
                         if (note.isMute) break;
+                        stobj.kWav = note.kWav;
                         stobj.hasAnswer = true;
                         if (note.isBreak)
                         {
@@ -237,6 +275,7 @@ public partial class MainWindow
                     case SimaiNoteType.Hold:
                     {
                         if (note.isMute) break;
+                        stobj.kWav = note.kWav;
                         stobj.hasAnswer = true;
                         // 类似于Tap 判断Break和Ex的音效 二者皆无则为普通
                         if (note.isBreak)
@@ -271,6 +310,7 @@ public partial class MainWindow
                     }
                     case SimaiNoteType.Slide:
                     {
+                        stobj.kWav = note.kWav;
                         if (!note.isSlideNoHead && !note.isMute)
                         {
                             // 当Slide不是无头星星的时候 才有answer音和判定音
@@ -302,9 +342,9 @@ public partial class MainWindow
                         {
                             SoundEffectTiming slide;
                             if (note.isSlideBreak)
-                                slide = new SoundEffectTiming(targetTime, _hasBreakSlideStart: true);
+                                slide = new SoundEffectTiming(targetTime, _hasBreakSlideStart: true, _kWav: note.kWav);
                             else
-                                slide = new SoundEffectTiming(targetTime, _hasSlide: true);
+                                slide = new SoundEffectTiming(targetTime, _hasSlide: true, _kWav: note.kWav);
                             waitToBePlayed.Add(slide);
                         }
 
@@ -321,7 +361,7 @@ public partial class MainWindow
                             else
                             {
                                 var slide = new SoundEffectTiming(targetTime, _hasBreakSlide: true,
-                                    _hasJudgeBreakSlide: true);
+                                    _hasJudgeBreakSlide: true, _kWav: note.kWav);
                                 waitToBePlayed.Add(slide);
                             }
                         }
@@ -330,6 +370,7 @@ public partial class MainWindow
                     case SimaiNoteType.Touch:
                     {
                         if (note.isMute) break;
+                        stobj.kWav = note.kWav;
                         stobj.hasAnswer = true;
                         stobj.hasTouch = true;
                         if (note.isHanabi) stobj.hasHanabi = true;
@@ -338,6 +379,7 @@ public partial class MainWindow
                     case SimaiNoteType.TouchHold:
                     {
                         if (note.isMute) break;
+                        stobj.kWav = note.kWav;
                         stobj.hasAnswer = true;
                         stobj.hasTouch = true;
                         stobj.hasTouchHold = true;
@@ -353,7 +395,7 @@ public partial class MainWindow
                         else
                         {
                             var tHoldRelease = new SoundEffectTiming(targetTime, true, _hasHanabi: note.isHanabi,
-                                _hasTouchHoldEnd: true);
+                                _hasTouchHoldEnd: true, _kWav: note.kWav);
                             waitToBePlayed.Add(tHoldRelease);
                         }
 
@@ -525,6 +567,14 @@ public partial class MainWindow
             for (var t = 0; t < sample.RawSize && time + t < typeSamples[type].Length; t++)
                 typeSamples[type][time + t] = sample.Raw[t];
         }
+        void ksampleWrite(int time, SoundBank sample, SoundDataType type)
+        {
+            if (sample == null) return;
+            if (sample.Raw == null) return;
+            if (sample.Frequency <= 0) return;
+            for (var t = 0; t < sample.RawSize && time + t < typeSamples[type].Length; t++)
+                typeSamples[type][time + t] = sample.Raw[t];
+        }
 
         void sampleWipe(int timeFrom, int timeTo, SoundDataType type)
         {
@@ -536,34 +586,95 @@ public partial class MainWindow
         foreach (var soundTiming in waitToBePlayed!)
         {
             var startIndex = (int)(soundTiming.time * freq) * 2; //乘2因为有两个channel
-            if (soundTiming.hasAnswer) sampleWrite(startIndex, SoundDataType.Answer);
-            if (soundTiming.hasJudge) sampleWrite(startIndex, SoundDataType.Judge);
-            if (soundTiming.hasJudgeBreak) sampleWrite(startIndex, SoundDataType.JudgeBreak);
-            if (soundTiming.hasJudgeEx) sampleWrite(startIndex, SoundDataType.JudgeEX);
-            if (soundTiming.hasBreak)
-                // Reach for the Stars.ogg
-                sampleWrite(startIndex, SoundDataType.Break);
-            if (soundTiming.hasHanabi) sampleWrite(startIndex, SoundDataType.Hanabi);
-            if (soundTiming.hasTouchHold)
+            if (string.IsNullOrEmpty(soundTiming.kWav))
             {
-                // no need to "CutNow" as HoldEnd did the work.
-                sampleWrite(startIndex, SoundDataType.TouchHold);
-                trackOps.Add(new SoundDataRange(SoundDataType.TouchHold, startIndex, holdRiserBank.RawSize));
-            }
+                if (soundTiming.hasAnswer) sampleWrite(startIndex, SoundDataType.Answer);
+                if (soundTiming.hasJudge) sampleWrite(startIndex, SoundDataType.Judge);
+                if (soundTiming.hasJudgeBreak) sampleWrite(startIndex, SoundDataType.JudgeBreak);
+                if (soundTiming.hasJudgeEx) sampleWrite(startIndex, SoundDataType.JudgeEX);
+                if (soundTiming.hasBreak)
+                    // Reach for the Stars.ogg
+                    sampleWrite(startIndex, SoundDataType.Break);
+                if (soundTiming.hasHanabi) sampleWrite(startIndex, SoundDataType.Hanabi);
+                if (soundTiming.hasTouchHold)
+                {
+                    // no need to "CutNow" as HoldEnd did the work.
+                    sampleWrite(startIndex, SoundDataType.TouchHold);
+                    trackOps.Add(new SoundDataRange(SoundDataType.TouchHold, startIndex, holdRiserBank.RawSize));
+                }
 
-            if (soundTiming.hasTouchHoldEnd)
+                if (soundTiming.hasTouchHoldEnd)
+                {
+                    //不覆盖整个track，只覆盖可能有的部分
+                    var lastTouchHoldOp = trackOps.FindLast(trackOp => trackOp.Type == SoundDataType.TouchHold);
+                    sampleWipe(startIndex, (int)lastTouchHoldOp.To, SoundDataType.TouchHold);
+                    continue;
+                }
+
+                if (soundTiming.hasSlide) sampleWrite(startIndex, SoundDataType.Slide);
+                if (soundTiming.hasTouch) sampleWrite(startIndex, SoundDataType.Touch);
+                if (soundTiming.hasBreakSlideStart) sampleWrite(startIndex, SoundDataType.BreakSlideStart);
+                if (soundTiming.hasBreakSlide) sampleWrite(startIndex, SoundDataType.BreakSlide);
+                if (soundTiming.hasJudgeBreakSlide) sampleWrite(startIndex, SoundDataType.JudgeBreakSlide);
+            }
+            else 
             {
-                //不覆盖整个track，只覆盖可能有的部分
-                var lastTouchHoldOp = trackOps.FindLast(trackOp => trackOp.Type == SoundDataType.TouchHold);
-                sampleWipe(startIndex, (int)lastTouchHoldOp.To, SoundDataType.TouchHold);
-                continue;
-            }
+                var _answerBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_answer"));
+                _answerBank.InitializeRawSample();
+                var _judgeBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_judge"));
+                _judgeBank.InitializeRawSample();
+                var _judgeBreakBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_judge_break"));
+                _judgeBreakBank.InitializeRawSample();
+                var _judgeExBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_judge_ex"));
+                _judgeExBank.InitializeRawSample();
+                var _breakBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_break"));
+                _breakBank.InitializeRawSample();
+                var _hanabiBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "hanabi"));
+                _hanabiBank.InitializeRawSample();
+                var _holdRiserBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_touchHold_riser"));
+                _holdRiserBank.InitializeRawSample();
+                var _slideBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_slide"));
+                _slideBank.InitializeRawSample();
+                var _touchBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_touch"));
+                _touchBank.InitializeRawSample();
+                var _fanfareBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_fanfare"));
+                _fanfareBank.InitializeRawSample();
+                var _breakSlideStartBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_break_slide_start"));
+                _breakSlideStartBank.InitializeRawSample();
+                var _breakSlideBank = new SoundBank(path + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_break_slide"));
+                _breakSlideBank.InitializeRawSample();
+                var _judgeBreakSlideBank = new SoundBank(path + "/" + soundTiming.kWav.Insert(soundTiming.kWav.Length - 4, "_judge_break_slide"));
+                _judgeBreakSlideBank.InitializeRawSample();
 
-            if (soundTiming.hasSlide) sampleWrite(startIndex, SoundDataType.Slide);
-            if (soundTiming.hasTouch) sampleWrite(startIndex, SoundDataType.Touch);
-            if (soundTiming.hasBreakSlideStart) sampleWrite(startIndex, SoundDataType.BreakSlideStart);
-            if (soundTiming.hasBreakSlide) sampleWrite(startIndex, SoundDataType.BreakSlide);
-            if (soundTiming.hasJudgeBreakSlide) sampleWrite(startIndex, SoundDataType.JudgeBreakSlide);
+                if (soundTiming.hasAnswer) ksampleWrite(startIndex, _answerBank, SoundDataType.Answer);
+                if (soundTiming.hasJudge) ksampleWrite(startIndex, _judgeBank, SoundDataType.Judge);
+                if (soundTiming.hasJudgeBreak) ksampleWrite(startIndex, _judgeBreakBank, SoundDataType.JudgeBreak);
+                if (soundTiming.hasJudgeEx) ksampleWrite(startIndex, _judgeExBank, SoundDataType.JudgeEX);
+                if (soundTiming.hasBreak)
+                    // Reach for the Stars.ogg
+                    ksampleWrite(startIndex, _breakBank, SoundDataType.Break);
+                if (soundTiming.hasHanabi) ksampleWrite(startIndex, _hanabiBank, SoundDataType.Hanabi);
+                if (soundTiming.hasTouchHold)
+                {
+                    // no need to "CutNow" as HoldEnd did the work.
+                    ksampleWrite(startIndex, _holdRiserBank, SoundDataType.TouchHold);
+                    trackOps.Add(new SoundDataRange(SoundDataType.TouchHold, startIndex, _holdRiserBank.RawSize));
+                }
+
+                if (soundTiming.hasTouchHoldEnd)
+                {
+                    //不覆盖整个track，只覆盖可能有的部分
+                    var lastTouchHoldOp = trackOps.FindLast(trackOp => trackOp.Type == SoundDataType.TouchHold);
+                    sampleWipe(startIndex, (int)lastTouchHoldOp.To, SoundDataType.TouchHold);
+                    continue;
+                }
+
+                if (soundTiming.hasSlide) ksampleWrite(startIndex, _slideBank, SoundDataType.Slide);
+                if (soundTiming.hasTouch) ksampleWrite(startIndex, _touchBank, SoundDataType.Touch);
+                if (soundTiming.hasBreakSlideStart) ksampleWrite(startIndex, _breakSlideStartBank, SoundDataType.BreakSlideStart);
+                if (soundTiming.hasBreakSlide) ksampleWrite(startIndex, _breakSlideBank, SoundDataType.BreakSlide);
+                if (soundTiming.hasJudgeBreakSlide) ksampleWrite(startIndex, _judgeBreakBank, SoundDataType.JudgeBreakSlide);
+            }
             if (soundTiming.hasAllPerfect)
             {
                 sampleWrite(startIndex, SoundDataType.AllPerfect);
@@ -767,6 +878,7 @@ public partial class MainWindow
         public bool hasTouch;
         public bool hasTouchHold;
         public bool hasTouchHoldEnd;
+        public string kWav;
         public int noteGroupIndex = -1;
 
         public SoundEffectTiming(double _time, bool _hasAnswer = false, bool _hasJudge = false,
@@ -774,7 +886,7 @@ public partial class MainWindow
             bool _hasBreak = false, bool _hasTouch = false, bool _hasHanabi = false,
             bool _hasJudgeEx = false, bool _hasTouchHold = false, bool _hasSlide = false,
             bool _hasTouchHoldEnd = false, bool _hasAllPerfect = false, bool _hasClock = false,
-            bool _hasBreakSlideStart = false, bool _hasBreakSlide = false, bool _hasJudgeBreakSlide = false)
+            bool _hasBreakSlideStart = false, bool _hasBreakSlide = false, bool _hasJudgeBreakSlide = false, string _kWav = "")
         {
             time = _time;
             hasAnswer = _hasAnswer;
@@ -792,6 +904,7 @@ public partial class MainWindow
             hasBreakSlideStart = _hasBreakSlideStart;
             hasBreakSlide = _hasBreakSlide;
             hasJudgeBreakSlide = _hasJudgeBreakSlide;
+            kWav = _kWav;
         }
     }
 

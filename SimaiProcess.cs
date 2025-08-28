@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media.Converters;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MajdataEdit;
 
@@ -435,6 +437,26 @@ internal class SimaiTimingPoint
     {
         var simaiNote = new SimaiNote();
 
+        string kPattern = @"k""([^""]+\.png)""(?:'([^']+\.wav)')?|k'([^']+\.wav)'"; // k"*.png" or k'*.wav' or k"*.png"'*.wav'
+        {
+            Match m = Regex.Match(noteText, kPattern);
+            string skin = "", wav = "";
+            if (m.Groups[1].Success)
+            {
+                skin = m.Groups[1].Value;
+                if (m.Groups[2].Success)
+                    wav = m.Groups[2].Value;
+            }
+            else if (m.Groups[3].Success)
+            {
+                wav = m.Groups[3].Value;
+            }
+            simaiNote.kSkin = skin;
+            simaiNote.kWav = wav;
+
+            noteText = Regex.Replace(noteText, kPattern, ""); // remove k part
+        }
+
         if (isTouchNote(noteText))
         {
             simaiNote.touchArea = noteText[0];
@@ -745,4 +767,7 @@ internal class SimaiNote
 
     public int startPosition = 1; //键位（1-8）
     public char touchArea = ' ';
+
+    public string kSkin = "";
+    public string kWav = "";
 }
