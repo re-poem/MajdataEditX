@@ -165,6 +165,28 @@ internal static class SimaiProcess
                     Xcount = 0;
                     continue;
                 }
+                if (text[i] == '$' && i + 1 < text.Length && text[i + 1] == '$')
+                {
+                    // 跳过自定义代码行
+                    Xcount++;
+
+                    string customCmd = "";
+                    while (i < text.Length && text[i] != '\n')
+                    {
+                        customCmd += text[i];
+                        i++;
+                        Xcount++;
+                    }
+
+                    _notelist.Add(new SimaiTimingPoint(time, Xcount, Ycount, customCmd, bpm)
+                    {
+                        noteList = new List<SimaiNote>() { new SimaiNote { noteType = SimaiNoteType.NoneOrCmd, noteContent = customCmd } }
+                    });
+
+                    Ycount++;
+                    Xcount = 0;
+                    continue;
+                }
 
                 if (text[i] == '\n')
                 {
@@ -751,7 +773,8 @@ internal enum SimaiNoteType
     Slide,
     Hold,
     Touch,
-    TouchHold
+    TouchHold,
+    NoneOrCmd
 }
 
 internal class SimaiNote
