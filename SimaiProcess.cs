@@ -588,6 +588,14 @@ internal class SimaiTimingPoint
             }
             noteText = noteText.Replace("m", "");
         }
+
+        //unplayable
+        if (noteText.Contains('u'))
+        {
+            simaiNote.isUnplayable = true;
+            noteText = noteText.Replace("u", "");
+        }
+
         //EX
         if (noteText.Contains('x'))
         {
@@ -595,6 +603,7 @@ internal class SimaiTimingPoint
             noteText = noteText.Replace("x", "");
         }
 
+        //SVEffect
         if (noteText.Contains('c'))
         {
             simaiNote.canSVAffect = false;
@@ -757,6 +766,7 @@ internal class SimaiNote
     public bool isSlideBreak;
     public bool isSlideMute;
     public bool isSlideNoHead;
+    public bool isUnplayable;
     public bool canSVAffect = true;
 
     public string? noteContent; //used for star explain
