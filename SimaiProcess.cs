@@ -14,6 +14,7 @@ internal static class SimaiProcess
     public static string? designer;
     public static string? other_commands;
     public static float first;
+    public static string? wholebpm;
     public static string[] fumens = new string[7];
     public static string[] levels = new string[7];
 
@@ -36,6 +37,7 @@ internal static class SimaiProcess
         artist = "";
         designer = "";
         first = 0;
+        wholebpm = "";
         fumens = new string[7];
         levels = new string[7];
         notelist = new List<SimaiTimingPoint>();
@@ -64,6 +66,11 @@ internal static class SimaiProcess
                     designer = GetValue(maidataTxt[i]);
                 else if (maidataTxt[i].StartsWith("&first="))
                     first = float.Parse(GetValue(maidataTxt[i]));
+                else if (maidataTxt[i].StartsWith("&wholebpm="))
+                {
+                    wholebpm = GetValue(maidataTxt[i]);
+                    other_commands += maidataTxt[i].Trim() + "\n";
+                }
                 else if (maidataTxt[i].StartsWith("&lv_") || maidataTxt[i].StartsWith("&inote_"))
                     for (var j = 1; j < 8 && i < maidataTxt.Length; j++)
                     {
@@ -493,7 +500,6 @@ internal class SimaiTimingPoint
         }
 
         if (noteText.Contains('f')) simaiNote.isHanabi = true;
-        if (noteText.Contains('c')) simaiNote.canSVAffect = false;
 
         //hold
         if (noteText.Contains('h'))
@@ -628,8 +634,12 @@ internal class SimaiTimingPoint
         //SVEffect
         if (noteText.Contains('c'))
         {
-            simaiNote.canSVAffect = false;
-            noteText = noteText.Replace("c", "");
+            if (int.TryParse(noteText[noteText.IndexOf('c') + 1].ToString(), out int count))
+            {
+                simaiNote.canSVAffect = count;
+            }
+            else simaiNote.canSVAffect = 0;
+            noteText = noteText.Remove(noteText.IndexOf('c') + 1, 1).Replace("c", "");
         }
 
         //starHead
@@ -790,7 +800,7 @@ internal class SimaiNote
     public bool isSlideMute;
     public bool isSlideNoHead;
     public bool isUnplayable;
-    public bool canSVAffect = true;
+    public int canSVAffect = 1;
 
     public string? noteContent; //used for star explain
     public SimaiNoteType noteType;

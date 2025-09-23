@@ -7,6 +7,7 @@ internal class Majson
     public string difficulty = "EZ";
     public int diffNum = 0;
     public string level = "1";
+    public string wholebpm = "180";
     public List<SimaiTimingPoint> timingList = new();
     public string title = "default";
 }
