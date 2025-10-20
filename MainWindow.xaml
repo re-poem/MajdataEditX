@@ -256,16 +256,6 @@
                VerticalAlignment="Bottom" VerticalContentAlignment="Center"
                Foreground="{DynamicResource ButtonForeground}" HorizontalAlignment="Left" Width="35"
                HorizontalContentAlignment="Center" ToolTip="{lex:Loc SpeedSettingTooltip}" Grid.Row="1" Grid.Column="1" />
-        <Grid x:Name="PlbSpdAdjGrid" HorizontalAlignment="Left" Height="105" Margin="102,289,0,0"
-              VerticalAlignment="Top" Width="148" Visibility="Hidden" Grid.Row="1" Grid.Column="1">
-            <Grid.Background>
-                <SolidColorBrush Color="#FF303030" Opacity="0.8" />
-            </Grid.Background>
-            <Label Content="{lex:Loc PlayBackSpeed}" Height="26" Margin="44,20,44,0" VerticalAlignment="Top"
-                   Foreground="White" HorizontalContentAlignment="Center" />
-            <Label x:Name="PlbSpdLabel" Content="100%" Margin="34,46,34,20" Foreground="White" FontWeight="Bold"
-                   FontSize="22" HorizontalContentAlignment="Center" />
-        </Grid>
         <Grid x:Name="FindGrid" Margin="0,29,28,0" Grid.Column="2" HorizontalAlignment="Right" Width="272" Height="69"
               VerticalAlignment="Top" Visibility="Collapsed" Grid.Row="1">
             <Grid.Background>

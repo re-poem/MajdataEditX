@@ -61,7 +61,6 @@ public partial class MainWindow : Window
         currentTimeRefreshTimer.Start();
         visualEffectRefreshTimer.Elapsed += VisualEffectRefreshTimer_Elapsed;
         waveStopMonitorTimer.Elapsed += WaveStopMonitorTimer_Elapsed;
-        playbackSpeedHideTimer.Elapsed += PlbHideTimer_Elapsed;
 
         if (editorSetting!.AutoCheckUpdate) CheckUpdate(true);
 
@@ -473,37 +472,12 @@ public partial class MainWindow : Window
 
     private void IncreasePlaybackSpeed_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
     {
-        if (Bass.BASS_ChannelIsActive(bgmStream) == BASSActive.BASS_ACTIVE_PLAYING) return;
-        var speed = GetPlaybackSpeed();
-        Console.WriteLine(speed);
-        speed += 0.25f;
-        PlbSpdLabel.Content = speed * 100 + "%";
-        SetPlaybackSpeed(speed);
-        PlbSpdAdjGrid.Visibility = Visibility.Visible;
-        playbackSpeedHideTimer.Stop();
-        playbackSpeedHideTimer.Start();
+        SetPlaybackSpeedDiff(1);
     }
 
     private void DecreasePlaybackSpeed_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
     {
-        if (Bass.BASS_ChannelIsActive(bgmStream) == BASSActive.BASS_ACTIVE_PLAYING) return;
-        var speed = GetPlaybackSpeed();
-        Console.WriteLine(speed);
-        speed -= 0.25f;
-        if (speed < 1e-6) return; // Interrupt if it's an epsilon or lower.
-        PlbSpdLabel.Content = speed * 100 + "%";
-        SetPlaybackSpeed(speed);
-        PlbSpdAdjGrid.Visibility = Visibility.Visible;
-        playbackSpeedHideTimer.Stop();
-        playbackSpeedHideTimer.Start();
-    }
-
-    private readonly Timer playbackSpeedHideTimer = new(1000);
-
-    private void PlbHideTimer_Elapsed(object? sender, ElapsedEventArgs e)
-    {
-        Dispatcher.Invoke(() => { PlbSpdAdjGrid.Visibility = Visibility.Collapsed; });
-        ((Timer)sender!).Stop();
+        SetPlaybackSpeedDiff(-1);
     }
 
     private void FindCommand_CanExecute(object? sender, CanExecuteRoutedEventArgs e)

@@ -1136,24 +1136,39 @@ public partial class MainWindow : Window
             TogglePlay(playMethod);
     }
 
-    private void SetPlaybackSpeed(float speed)
+    private void SetPlaybackSpeed(int speedItem)
     {
-        var scale = (speed - 1) * 100f;
-        Bass.BASS_ChannelSetAttribute(bgmStream, BASSAttribute.BASS_ATTRIB_TEMPO, scale);
+        speedItem = Math.Max(0, speedItem);
+        speedItem = Math.Min(PlayBackSpeedSelector.Items.Count - 1, speedItem);
+        PlayBackSpeedSelector.SelectedIndex = speedItem;
     }
+
+    private void SetPlaybackSpeedDiff(int speedItemDiff) => SetPlaybackSpeed(PlayBackSpeedSelector.SelectedIndex + speedItemDiff);
 
     private float GetPlaybackSpeed()
     {
-        var speed = PlayBackSpeedSelector.SelectedItem switch
+        //var speed = PlayBackSpeedSelector.SelectedItem switch
+        //{
+        //    ComboBoxItem { Content: "0.10x" } => -90,
+        //    ComboBoxItem { Content: "0.25x" } => -75,
+        //    ComboBoxItem { Content: "0.50x" } => -50,
+        //    ComboBoxItem { Content: "0.75x" } => -25,
+        //    ComboBoxItem { Content: "1.00x" } => 0,
+        //    ComboBoxItem { Content: "1.50x" } => 50,
+        //    ComboBoxItem { Content: "1.75x" } => 75,
+        //    ComboBoxItem { Content: "2.00x" } => 100,
+        //    _ => 0
+        //};
+        var speed = PlayBackSpeedSelector.SelectedIndex switch
         {
-            ComboBoxItem { Content: "0.10x" } => -90,
-            ComboBoxItem { Content: "0.25x" } => -75,
-            ComboBoxItem { Content: "0.50x" } => -50,
-            ComboBoxItem { Content: "0.75x" } => -25,
-            ComboBoxItem { Content: "1.00x" } => 0,
-            ComboBoxItem { Content: "1.50x" } => 50,
-            ComboBoxItem { Content: "1.75x" } => 75,
-            ComboBoxItem { Content: "2.00x" } => 100,
+            0 => -90,
+            1 => -75,
+            2 => -50,
+            3 => -25,
+            4 => 0,
+            5 => 50,
+            6 => 75,
+            7 => 100,
             _ => 0
         };
         return speed / 100f + 1f;
