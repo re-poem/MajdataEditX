@@ -1,4 +1,11 @@
-﻿using System.Diagnostics;
+﻿using DiscordRPC;
+using MajdataEdit.AutoSaveModule;
+using MajdataEdit.SyntaxModule;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Semver;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -16,17 +23,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
-using DiscordRPC;
-using MajdataEdit.AutoSaveModule;
-using MajdataEdit.SyntaxModule;
-using Microsoft.Win32;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Semver;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Fx;
 using WPFLocalizeExtension.Engine;
 using WPFLocalizeExtension.Extensions;
+using static System.Net.Mime.MediaTypeNames;
 using Brush = System.Drawing.Brush;
 using Color = System.Drawing.Color;
 using DashStyle = System.Drawing.Drawing2D.DashStyle;
@@ -976,7 +977,7 @@ public partial class MainWindow : Window
 
         //TODO: Moeying改一下你的generateSoundEffect然后把下面这行删了
         var isOpIncluded = playMethod == PlayMethod.Normal ? false : true;
-
+        
         var startAt = DateTime.Now;
         switch (playMethod)
         {
@@ -1216,6 +1217,7 @@ public partial class MainWindow : Window
         jsonStruct.difficulty = SimaiProcess.GetDifficultyText(selectedDifficulty);
         jsonStruct.diffNum = selectedDifficulty;
         jsonStruct.wholebpm = SimaiProcess.wholebpm!;
+        jsonStruct.mode = IsDeluxeChart() ? ChartMode.Deluxe : ChartMode.Standard; //TODO
 
         var json = JsonConvert.SerializeObject(jsonStruct);
         var path = maidataDir + "/majdata.json";
@@ -1530,6 +1532,27 @@ public partial class MainWindow : Window
     public void OpenFile(string path)
     {
         initFromFile(path);
+    }
+
+    public bool IsDeluxeChart()
+    {
+        foreach (var noteGroup in SimaiProcess.notelist)
+            foreach (var note in noteGroup.getNotes())
+                if (note.isEx) // tap
+                    return true;
+                else if (note.noteType == SimaiNoteType.Hold && note.isBreak) // break hold
+                    return true;
+                else if (note.noteType is SimaiNoteType.Touch or SimaiNoteType.TouchHold) // touch
+                    return true;
+                else if (note.noteType == SimaiNoteType.Slide) // slide
+                    if (note.isSlideBreak) //break slide
+                        return true;
+                    else                   //festival slide
+                        foreach (var c in new []{ "-", "^", "v", "<", ">", "V", "s", "z", "w", "qq", "pp" })
+                            if (((note.noteContent!.Length - note.noteContent!.Replace(c, "").Length) / c.Length) > 1)
+                                return true;
+
+        return false;
     }
 
 

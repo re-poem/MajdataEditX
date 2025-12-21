@@ -10,6 +10,7 @@ internal class Majson
     public string wholebpm = "180";
     public List<SimaiTimingPoint> timingList = new();
     public string title = "default";
+    public ChartMode mode = ChartMode.Deluxe;
 }
 
 internal class EditRequestjson
@@ -25,6 +26,12 @@ internal class EditRequestjson
     public float startTime;
     public float touchSpeed;
     public bool smoothSlideAnime;
+}
+
+public enum ChartMode
+{
+    Standard,
+    Deluxe
 }
 
 public enum EditorPlayMethod
