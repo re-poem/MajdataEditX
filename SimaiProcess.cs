@@ -634,12 +634,17 @@ internal class SimaiTimingPoint
         //SVEffect
         if (noteText.Contains('c'))
         {
-            if (int.TryParse(noteText[noteText.IndexOf('c') + 1].ToString(), out int count))
+            var count = 0;
+            var cPos = noteText.IndexOf('c');
+            var cLen = 0;
+            for (var pos = cPos + 1; pos < noteText.Length && int.TryParse(noteText[pos].ToString(), out int c); pos++)
             {
-                simaiNote.canSVAffect = count;
+                count = count * 10 + c;
+                cLen++;
             }
-            else simaiNote.canSVAffect = 0;
-            noteText = noteText.Remove(noteText.IndexOf('c') + 1, 1).Replace("c", "");
+
+            simaiNote.canSVAffect = count;
+            noteText = noteText.Remove(cPos, cLen+1);
         }
 
         //starHead
