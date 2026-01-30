@@ -294,6 +294,8 @@ public partial class MainWindow : Window
         jsonStruct.designer = SimaiProcess.designers[selectedDifficulty];
         jsonStruct.difficulty = SimaiProcess.GetDifficultyText(selectedDifficulty);
         jsonStruct.diffNum = selectedDifficulty;
+        jsonStruct.wholebpm = SimaiProcess.simaiFile.Commands.FirstOrDefault(n => n.Prefix == "wholebpm").Value ?? "0";
+        jsonStruct.mode = IsDeluxeChart() ? ChartMode.Deluxe : ChartMode.Standard;
 
         var json = JsonConvert.SerializeObject(jsonStruct);
         var path = maidataDir + "/majdata.json";

@@ -1,6 +1,7 @@
 ﻿using DiffMatchPatch;
 using DiscordRPC;
 using MajdataEdit.ChartShare;
+using MajSimai;
 using Microsoft.AspNetCore.SignalR.Client;
 using Semver;
 using System.Net;
@@ -139,5 +140,26 @@ public partial class MainWindow : Window
             }
         }
         return "127.0.0.1";
+    }
+
+    public bool IsDeluxeChart()
+    {
+        foreach (var noteGroup in SimaiProcess.noteLists[selectedDifficulty])
+            foreach (var note in noteGroup.Notes)
+                if (note.IsEx) // tap
+                    return true;
+                else if (note.Type == SimaiNoteType.Hold && note.IsBreak) // break hold
+                    return true;
+                else if (note.Type is SimaiNoteType.Touch or SimaiNoteType.TouchHold) // touch
+                    return true;
+                else if (note.Type == SimaiNoteType.Slide) // slide
+                    if (note.IsSlideBreak) //break slide
+                        return true;
+                    else                   //festival slide
+                        foreach (var c in new[] { "-", "^", "v", "<", ">", "V", "s", "z", "w", "qq", "pp" })
+                            if (((note.RawContent!.Length - note.RawContent!.Replace(c, "").Length) / c.Length) > 1)
+                                return true;
+
+        return false;
     }
 }
