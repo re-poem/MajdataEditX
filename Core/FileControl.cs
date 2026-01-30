@@ -284,6 +284,8 @@ public partial class MainWindow : Window
     }
     private void SaveFumen(bool writeToDisk)
     {
+        if (string.IsNullOrWhiteSpace(maidataDir)) return;
+
         string _maidataDir = maidataDir;
         if (IsShare)
         {
@@ -296,19 +298,8 @@ public partial class MainWindow : Window
             _client!.InvokeAsync(nameof(ChartHub.SaveFumen), true);
         }
 
-        if (selectedDifficulty == -1) return;
-
         SimaiProcess.fumens[selectedDifficulty] = GetRawFumenText();
         SimaiProcess.simaiFile.Offset = float.Parse(OffsetTextBox.Text);
-        if (_maidataDir == "")
-        {
-            var saveDialog = new SaveFileDialog
-            {
-                Filter = "maidata.txt|maidata.txt",
-                OverwritePrompt = true
-            };
-            if ((bool)saveDialog.ShowDialog()!) _maidataDir = new FileInfo(saveDialog.FileName).DirectoryName!;
-        }
 
         SyntaxCheck();
 
