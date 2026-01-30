@@ -12,6 +12,7 @@ public partial class MainWindow : Window
 {
     private async Task ToggleChartShare(bool initIfClose = false)
     {
+        Stop();
         if (ChartServer.App != null)
         {
             if (!isSaved) if (!AskSaveFumen()) return;
@@ -50,6 +51,7 @@ public partial class MainWindow : Window
     // 返回是否连接成功
     private async Task<bool> ConnectToChartServer(string ip, int port)
     {
+        Stop();
         try
         {
             if (_client != null)

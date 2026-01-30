@@ -23,6 +23,8 @@ public partial class MainWindow : Window
     /// <param name="setEmpty">是否清除窗口元素</param>
     public async void ClearWindow(bool setEmpty = false)
     {
+        Stop();
+
         // share
         if (IsShare) await ToggleChartShare();
 
@@ -36,16 +38,6 @@ public partial class MainWindow : Window
         SimaiProcess.Clear();
         LevelSelector.SelectedItem = "";
         OffsetTextBox.Text = "";
-
-        // stop playback
-        isPlaying = false;
-        isPlan2Stop = false;
-        FumenContent.Focus();
-        Bass.BASS_ChannelStop(bgmStream);
-        Bass.BASS_ChannelStop(holdRiserStream);
-        waveStopMonitorTimer.Stop();
-        visualEffectRefreshTimer.Stop();
-        RequestStop();
 
         // about save
         AutoSaveManager.Of().SetAutoSaveEnable(false);
