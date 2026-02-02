@@ -32,7 +32,7 @@
 	</ItemGroup>
     <ItemGroup>
         <PackageReference Include="DiffMatchPatch" Version="1.0.3" />
-        <PackageReference Include="Lingfeng-bbben.MajSimai" Version="2.0.511" />
+        <PackageReference Include="Lingfeng-bbben.MajSimai" Version="2.0.512" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />
         <PackageReference Include="pythonnet" Version="3.0.5" />
